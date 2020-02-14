@@ -3,7 +3,8 @@
 set -eou pipefail
 
 mkdir -p tmp
-git archive -0 --format zip HEAD > tmp/$USER-cookie-cutter-android.zip
+git archive -0 --format zip --prefix=toplevel/ HEAD > tmp/$USER-cookie-cutter-android.zip
 cd tmp
-cookiecutter --replay ./$USER-cookie-cutter-android.zip
-diff -urN $USER-cookie-cutter-android gold-standard
+rm -rf MyApp
+cookiecutter --no-input $USER-cookie-cutter-android.zip
+diff -urN MyApp gold-standard
