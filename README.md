@@ -24,6 +24,6 @@ export ANDROID_SDK_ROOT=/path/to/android/sdk
 ./create_sample_app.sh
 ```
 
-This will use `cookiecutter` to create, and build, a sample Python app.
+This will use `cookiecutter` to create, build, and run a sample Python app.
 
 If you don't know how to get 3.7.zip, then talk to Asheesh.
