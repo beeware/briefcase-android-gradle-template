@@ -1,12 +1,13 @@
-{"project_name": "MyApp",
- "python_app_name": "my_app",
- "package_name": "com.username.myapp",
- "_copy_without_render": [
-  "gradlew",
-  "gradle.bat",
-  "gradle/wrapper/gradle-wrapper.properties",
-  "gradle/wrapper/gradle-wrapper.jar",
-  ".gitignore",
-  "*.png"
- ]
+{
+  "project_name": "MyApp",
+  "module_name": "my_app",
+  "package_name": "com.username.myapp",
+  "_copy_without_render": [
+    "gradlew",
+    "gradle.bat",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "gradle/wrapper/gradle-wrapper.jar",
+    ".gitignore",
+    "*.png"
+  ]
 }
