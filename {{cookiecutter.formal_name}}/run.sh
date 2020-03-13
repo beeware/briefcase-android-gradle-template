@@ -2,7 +2,7 @@
 # Strict mode for bash.
 set -eou pipefail
 
-APP="{{cookiecutter.package_name}}"
+APP="{{cookiecutter.bundle}}.{{cookiecutter.app_name}}"
 MAIN_ACTIVITY="org.beeware.android.MainActivity"
 
 if [ -z "${ANDROID_SDK_ROOT:-}" ] ; then

@@ -1,6 +1,7 @@
 {
   "module_name": "my_app",
-  "package_name": "com.username.myapp",
+  "bundle": "com.example",
+  "app_name": "appname",
   "formal_name": "App Name",
   "_copy_without_render": [
     "gradlew",

@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "{{ cookiecutter.package_name }}"
+        applicationId "{{ cookiecutter.bundle }}.{{ cookiecutter.app_name }}"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
