@@ -1,0 +1,5 @@
+[paths]
+# TODO: Test app_packages_path & move it to a separate directory.
+app_path = "app/src/main/assets/python"
+app_packages_path = "app/src/main/assets/python"
+support_path = "."
