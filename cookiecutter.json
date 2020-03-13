@@ -1,7 +1,7 @@
 {
-  "project_name": "MyApp",
   "module_name": "my_app",
   "package_name": "com.username.myapp",
+  "formal_name": "App Name",
   "_copy_without_render": [
     "gradlew",
     "gradle.bat",
