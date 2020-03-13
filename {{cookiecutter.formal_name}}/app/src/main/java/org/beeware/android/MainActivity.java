@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         // We can't run app/__main__.py directly because it uses package-relative imports.
         String fullFilename = this.getPythonBasePath() + "/start_app.py";
         FileOutputStream fos = new FileOutputStream(fullFilename);
-        fos.write("import {{cookiecutter.python_app_name}}.__main__".getBytes());
+        fos.write("import {{cookiecutter.module_name}}.__main__".getBytes());
         fos.close();
         Python.run(fullFilename, new String[0]);
     }
