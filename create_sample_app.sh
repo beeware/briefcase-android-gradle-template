@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eou pipefail
 
-DEFAULT_PROJECT_NAME="MyApp"
-DEFAULT_PYTHON_APP_NAME="my_app"
+DEFAULT_FORMAL_NAME="App Name"
+DEFAULT_MODULE_NAME="my_app"
 
 # This script will use cookiecutter to create and launch a sample Python app.
 # It is approximately a shell script version of briefcase. It's intended
@@ -13,12 +13,12 @@ function createWorkingDirectory() {
     mkdir -p tmp
     git archive -0 --format zip --prefix=toplevel/ HEAD > tmp/"$USER"-cookie-cutter-android.zip
     cd tmp
-    rm -rf ./"$DEFAULT_PROJECT_NAME"
+    rm -rf ./"$DEFAULT_FORMAL_NAME"
 }
 
 function createApp() {
     cookiecutter --no-input "$USER"-cookie-cutter-android.zip
-    cd "$DEFAULT_PROJECT_NAME"
+    cd "$DEFAULT_FORMAL_NAME"
 }
 
 function addPython() {
@@ -26,7 +26,7 @@ function addPython() {
 }
 
 function addPythonCode() {
-    app_dir="$PWD/app/src/main/assets/python/$DEFAULT_PYTHON_APP_NAME"
+    app_dir="$PWD/app/src/main/assets/python/$DEFAULT_MODULE_NAME"
     cat > "$app_dir/__init__.py" <<EOF
 from rubicon.java import JavaClass, JavaInterface
 
