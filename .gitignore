@@ -1,2 +1,7 @@
 tmp
 *~
+.vscode
+.project
+.settings
+.classpath
+{{ cookiecutter.formal_name }}/gradle
