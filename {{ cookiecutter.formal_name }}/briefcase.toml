@@ -1,9 +1,6 @@
 [paths]
-# app and app_packages *should* be separated...
-# app_path = "app/src/main/assets/python/app"
-# app_packages_path = "app/src/main/assets/python/app_packages"
-app_path = "app/src/main/assets/python"
-app_packages_path = "app/src/main/assets/python"
+app_path = "app/src/main/assets/python/app"
+app_packages_path = "app/src/main/assets/python/app_packages"
 support_path = "app"
 
 icon.round.48 = "app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
