@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 import org.beeware.rubicon.Python;
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * We store the MainActivity instance on the *class* so that we can easily access it from Python.
+     * We store the MainActivity instance on the *class* so that we can easily
+     * access it from Python.
      */
     public static MainActivity singletonThis;
 
@@ -53,55 +56,68 @@ public class MainActivity extends AppCompatActivity {
         return dir;
     }
 
-    private String getPythonBasePath() throws IOException {
-        return this.getPythonBaseDir().getAbsolutePath();
+    private Map<String, File> getPythonDirs() throws IOException {
+        Map dirs = new HashMap<String, File>();
+        File base = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/python/");
+        // `stdlib` is used as PYTHONHOME.
+        File stdlib = new File(base.getAbsolutePath() + "/stdlib/");
+        ensureDir(stdlib);
+        dirs.put("stdlib", stdlib);
+        // `rubicon_java` is used to the required Rubicon module.
+        File rubicon_java = new File(base.getAbsolutePath() + "/rubicon-java/");
+        ensureDir(rubicon_java);
+        dirs.put("rubicon_java", rubicon_java);
+        // Put `user_code` into dirs so we can unpack the assets into it.
+        dirs.put("user_code", new File(base.getAbsolutePath() + "/user_code/"));
+        // `app` and `app_packages` store user code and user code dependencies,
+        // respectively. These paths exist within the `python/` assets tree.
+        File app = new File(base.getAbsolutePath() + "/user_code/app/");
+        dirs.put("app", app);
+        File app_packages = new File(base.getAbsolutePath() + "/user_code/app_packages/");
+        dirs.put("app_packages", app_packages);
+        return dirs;
     }
 
-    private File getPythonBaseDir() throws IOException {
-        return ensureDir(new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/python/"));
-    }
-
-    private File getUserCodeDir() throws IOException {
-        return ensureDir(new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/user-code"));
-    }
-
-    private File getRubiconJavaInstallDir() throws IOException {
-        return ensureDir(new File(getPythonBasePath() + "/rubicon-java/"));
-    }
-
-
-    private void unpackPython() throws IOException {
+    private void unpackPython(Map<String, File> dirs) throws IOException {
         String myAbi = Build.SUPPORTED_ABIS[0];
-        Log.e("unpackPython", "abi is " + myAbi);
-        unzipTo(new ZipInputStream(this.getAssets().open("pythonhome." + myAbi + ".zip")), this.getPythonBaseDir());
-        unzipTo(new ZipInputStream(this.getAssets().open("rubicon.zip")), getRubiconJavaInstallDir());
-        unpackAssetPrefix(getAssets(), "python", getUserCodeDir());
-        makeExecutable(new File(this.getPythonBaseDir() + "/bin/python3"));
-        makeExecutable(new File(this.getPythonBaseDir() + "/bin/python3.7"));
+        File pythonHome = dirs.get("stdlib");
+        Log.d("unpackPython", "Unpacking Python with ABI " + myAbi + " to " + pythonHome.getAbsolutePath());
+        unzipTo(new ZipInputStream(this.getAssets().open("pythonhome." + myAbi + ".zip")), pythonHome);
+        makeExecutable(new File(pythonHome.getAbsolutePath() + "/bin/python3"));
+        makeExecutable(new File(pythonHome.getAbsolutePath() + "/bin/python3.7"));
+        File rubicon_java = dirs.get("rubicon_java");
+        Log.d("unpackPython", "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
+        unzipTo(new ZipInputStream(this.getAssets().open("rubicon.zip")), rubicon_java);
+        File userCodeDir = dirs.get("user_code");
+        Log.d("unpackPython", "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
+        unpackAssetPrefix(getAssets(), "python", userCodeDir);
     }
 
-    private void setPythonEnvVars() throws IOException, ErrnoException {
+    private void setPythonEnvVars(String pythonHome) throws IOException, ErrnoException {
         Os.setenv("RUBICON_LIBRARY", this.getApplicationInfo().nativeLibraryDir + "/librubicon.so", true);
-        Log.v("python home", this.getPythonBasePath());
+        Log.v("python home", pythonHome);
         Context applicationContext = this.getApplicationContext();
         File cacheDir = applicationContext.getCacheDir();
         Os.setenv("TMPDIR", cacheDir.getAbsolutePath(), true);
         Os.setenv("LD_LIBRARY_PATH", this.getApplicationInfo().nativeLibraryDir, true);
-        Os.setenv("PYTHONHOME", this.getPythonBasePath(), true);
+        Os.setenv("PYTHONHOME", pythonHome, true);
         Os.setenv("ACTIVITY_CLASS_NAME", "org/beeware/android/MainActivity", true);
     }
 
-    private void startPython() throws Exception {
-        this.setPythonEnvVars();
-        this.unpackPython();
-        if (Python.init(this.getPythonBasePath(),
-                this.getRubiconJavaInstallDir().getAbsolutePath() + ":" + this.getUserCodeDir().getAbsolutePath(),
-                null) != 0) {
+    private void startPython(Map<String, File> dirs) throws Exception {
+        this.unpackPython(dirs);
+        String pythonHome = dirs.get("stdlib").getAbsolutePath();
+        this.setPythonEnvVars(pythonHome);
+        // `app` is the last item in the sysPath list.
+        String sysPath = (pythonHome + "/lib/python3.7/") + ":" + dirs.get("rubicon_java").getAbsolutePath() + ":"
+                + dirs.get("app_packages").getAbsolutePath() + ":" + dirs.get("app").getAbsolutePath();
+        if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
         }
         // Store the code in a file because Python.run() takes a filename.
-        // We can't run app/__main__.py directly because it uses package-relative imports.
-        String fullFilename = this.getPythonBasePath() + "/start_app.py";
+        // We don't run app/__main__.py directly to avoid problems with package-relative
+        // imports.
+        String fullFilename = dirs.get("user_code").getAbsolutePath() + "/start_app.py";
         FileOutputStream fos = new FileOutputStream(fullFilename);
         fos.write("import {{cookiecutter.module_name}}.__main__".getBytes());
         fos.close();
@@ -115,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(layout);
         singletonThis = this;
         try {
-            this.startPython();
+            Map<String, File> dirs = getPythonDirs();
+            this.startPython(dirs);
         } catch (Exception e) {
             Log.e("MainActivity", "Failed to create Python app", e);
             return;
