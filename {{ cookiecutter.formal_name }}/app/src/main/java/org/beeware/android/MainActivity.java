@@ -125,14 +125,8 @@ public class MainActivity extends AppCompatActivity {
             throw new Exception("Unable to start Python interpreter.");
         }
 
-        // Store the code in a file because Python.run() takes a filename.
-        // We don't run app/__main__.py directly to avoid problems with package-relative
-        // imports.
-        String fullFilename = dirs.get("user_code").getAbsolutePath() + "/start_app.py";
-        FileOutputStream fos = new FileOutputStream(fullFilename);
-        fos.write("import {{cookiecutter.module_name}}.__main__".getBytes());
-        fos.close();
-        Python.run(fullFilename, new String[0]);
+        // Run the app's main module, similar to `python -m`.
+        Python.run("{{cookiecutter.module_name}}", new String[0]);
     }
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
