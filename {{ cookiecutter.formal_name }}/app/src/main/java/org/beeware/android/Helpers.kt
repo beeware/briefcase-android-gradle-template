@@ -9,22 +9,6 @@ import java.util.zip.ZipInputStream
 
 const val TAG = "Helpers"
 
-fun makeExecutable(executable: File) {
-    if (executable.exists()) {
-        executable.setExecutable(true)
-        executable.setReadable(true)
-    } else {
-        throw IOException("Executable file is missing. Aborting.")
-    }
-    // See if magical restorecon saves the day
-    val pb =
-            ProcessBuilder("restorecon", executable.absolutePath)
-    println("Running restorecon...")
-    val process = pb.start()
-    val errCode = process.waitFor()
-    println("Restorecon finished. result=${errCode}")
-}
-
 fun unpackAssetPrefix(assets: AssetManager, assetPrefix: String, outputDir: File) {
     Log.d(TAG, "Clearing out path ${outputDir.absolutePath}")
     outputDir.deleteRecursively()
