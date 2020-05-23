@@ -20,7 +20,6 @@ import java.util.zip.ZipInputStream;
 import org.beeware.rubicon.Python;
 import org.jetbrains.annotations.Nullable;
 
-import static org.beeware.android.HelpersKt.makeExecutable;
 import static org.beeware.android.HelpersKt.unpackAssetPrefix;
 import static org.beeware.android.HelpersKt.unzipTo;
 
@@ -89,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("unpackPython", "Unpacking Python with ABI " + myAbi + " to " + pythonHome.getAbsolutePath());
         unzipTo(new ZipInputStream(this.getAssets().open("pythonhome." + myAbi + ".zip")), pythonHome);
-        makeExecutable(new File(pythonHome.getAbsolutePath() + "/bin/python3"));
-        makeExecutable(new File(pythonHome.getAbsolutePath() + "/bin/python3.7"));
         File rubicon_java = dirs.get("rubicon_java");
 
         Log.d("unpackPython", "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
