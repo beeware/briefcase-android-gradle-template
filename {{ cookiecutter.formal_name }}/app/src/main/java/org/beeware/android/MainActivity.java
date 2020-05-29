@@ -10,9 +10,13 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -57,46 +61,82 @@ public class MainActivity extends AppCompatActivity {
         return dir;
     }
 
-    private Map<String, File> getPythonDirs() throws IOException {
-        Map dirs = new HashMap<String, File>();
+    private Map<String, File> getPythonPaths() throws IOException {
+        Map paths = new HashMap<String, File>();
         File base = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/python/");
 
         // `stdlib` is used as PYTHONHOME.
         File stdlib = new File(base.getAbsolutePath() + "/stdlib/");
         ensureDir(stdlib);
-        dirs.put("stdlib", stdlib);
+        paths.put("stdlib", stdlib);
+
+        // We cache the stdlib by checking the contents of this file.
+        paths.put("stdlib-last-filename", new File(base.getAbsolutePath() + "/stdlib.last-filename"));
 
         // `rubicon_java` is used to the required Rubicon module.
         File rubicon_java = new File(base.getAbsolutePath() + "/rubicon-java/");
         ensureDir(rubicon_java);
-        dirs.put("rubicon_java", rubicon_java);
+        paths.put("rubicon_java", rubicon_java);
 
-        // Put `user_code` into dirs so we can unpack the assets into it.
-        dirs.put("user_code", new File(base.getAbsolutePath() + "/user_code/"));
+        // Put `user_code` into paths so we can unpack the assets into it.
+        paths.put("user_code", new File(base.getAbsolutePath() + "/user_code/"));
 
         // `app` and `app_packages` store user code and user code dependencies,
         // respectively. These paths exist within the `python/` assets tree.
         File app = new File(base.getAbsolutePath() + "/user_code/app/");
-        dirs.put("app", app);
+        paths.put("app", app);
 
         File app_packages = new File(base.getAbsolutePath() + "/user_code/app_packages/");
-        dirs.put("app_packages", app_packages);
-        return dirs;
+        paths.put("app_packages", app_packages);
+        return paths;
     }
 
-    private void unpackPython(Map<String, File> dirs) throws IOException {
-        Log.d(TAG, "unpackPython() start");
+    private void unpackPython(Map<String, File> paths) throws IOException {
         String myAbi = Build.SUPPORTED_ABIS[0];
-        File pythonHome = dirs.get("stdlib");
+        File pythonHome = paths.get("stdlib");
 
-        Log.d(TAG, "Unpacking Python with ABI " + myAbi + " to " + pythonHome.getAbsolutePath());
-        unzipTo(new ZipInputStream(this.getAssets().open("pythonhome." + myAbi + ".zip")), pythonHome);
-        File rubicon_java = dirs.get("rubicon_java");
+        // Get list of assets under the stdlib/ directory, filtering for our ABI.
+        String[] stdlibAssets = this.getAssets().list("stdlib");
+        String pythonHomeZipFilename = null;
+        String abiZipSuffix = myAbi + ".zip";
+        for (int i = 0; i < stdlibAssets.length; i++) {
+            String asset = stdlibAssets[i];
+            if (asset.startsWith("pythonhome.") && asset.endsWith(abiZipSuffix)) {
+                pythonHomeZipFilename = "stdlib/" + asset;
+                break;
+            }
+        }
+        // Unpack stdlib, except if it's missing, abort; and if we already unpacked a
+        // file of the same name, then skip it. That way, the filename can serve as
+        // a cache identifier.
+        if (pythonHomeZipFilename == null) {
+            throw new RuntimeException("Unable to find file matching pythonhome.* and " +
+                                       abiZipSuffix);
+        }
+        File stdlibLastFilenamePath = paths.get("stdlib-last-filename");
+        boolean cacheOk = false;
+        if (stdlibLastFilenamePath.exists()) {
+            BufferedReader reader = Files.newBufferedReader(stdlibLastFilenamePath.toPath(), StandardCharsets.UTF_8);
+            String stdlibLastFilename = reader.readLine();
+            if (stdlibLastFilename.equals(pythonHomeZipFilename)) {
+                cacheOk = true;
+            }
+        }
+        if (cacheOk) {
+            Log.d(TAG, "Skipping unpack of Python stdlib due to cache hit on " + pythonHomeZipFilename);
+        } else {
+            Log.d(TAG, "Unpacking Python stdlib due to cache miss on " + pythonHomeZipFilename);
+            unzipTo(new ZipInputStream(this.getAssets().open(pythonHomeZipFilename)), pythonHome);
+            BufferedWriter writer = Files.newBufferedWriter(stdlibLastFilenamePath.toPath(), StandardCharsets.UTF_8);
+            writer.write(pythonHomeZipFilename, 0, pythonHomeZipFilename.length());
+            writer.close();
+        }
 
+        File rubicon_java = paths.get("rubicon_java");
         Log.d(TAG, "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
         unzipTo(new ZipInputStream(this.getAssets().open("rubicon.zip")), rubicon_java);
-        File userCodeDir = dirs.get("user_code");
 
+        File userCodeDir = paths.get("user_code");
         Log.d(TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
         unpackAssetPrefix(getAssets(), "python", userCodeDir);
         Log.d(TAG, "unpackPython() complete");
@@ -116,16 +156,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "setPythonEnvVars() complete");
     }
 
-    private void startPython(Map<String, File> dirs) throws Exception {
-        Log.d(TAG, "startPython() start");
-        this.unpackPython(dirs);
-        String pythonHome = dirs.get("stdlib").getAbsolutePath();
+    private void startPython(Map<String, File> paths) throws Exception {
+        this.unpackPython(paths);
+        String pythonHome = paths.get("stdlib").getAbsolutePath();
         this.setPythonEnvVars(pythonHome);
 
         // `app` is the last item in the sysPath list.
-        String sysPath = (pythonHome + "/lib/python3.7/") + ":" + dirs.get("rubicon_java").getAbsolutePath() + ":"
-                + dirs.get("app_packages").getAbsolutePath() + ":" + dirs.get("app").getAbsolutePath();
-        Log.d(TAG, "Python.init() start");
+        String sysPath = (pythonHome + "/lib/python3.7/") + ":" + paths.get("rubicon_java").getAbsolutePath() + ":"
+                + paths.get("app_packages").getAbsolutePath() + ":" + paths.get("app").getAbsolutePath();
         if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
         }
@@ -147,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(layout);
         singletonThis = this;
         try {
-            Map<String, File> dirs = getPythonDirs();
-            this.startPython(dirs);
+            Map<String, File> paths = getPythonPaths();
+            this.startPython(paths);
         } catch (Exception e) {
             Log.e(TAG, "Failed to create Python app", e);
             return;
