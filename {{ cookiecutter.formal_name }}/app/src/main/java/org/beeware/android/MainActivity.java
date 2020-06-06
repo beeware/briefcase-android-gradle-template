@@ -25,8 +25,8 @@ import static org.beeware.android.HelpersKt.unzipTo;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Use `adb -s org.beeware.android.MainActivity.appLaunch` to profile app launch.
-    private String APP_LAUNCH_TAG = "org.beeware.android.MainActivity.appLaunch";
+    // To profile app launch, use `adb -s MainActivity`; look for "onCreate() start" and "onResume() completed".
+    private String TAG = "MainActivity";
     private static IPythonApp pythonApp;
 
     /**
@@ -85,26 +85,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void unpackPython(Map<String, File> dirs) throws IOException {
-        Log.d(APP_LAUNCH_TAG, "unpackPython() start");
+        Log.d(TAG, "unpackPython() start");
         String myAbi = Build.SUPPORTED_ABIS[0];
         File pythonHome = dirs.get("stdlib");
 
-        Log.d(APP_LAUNCH_TAG, "Unpacking Python with ABI " + myAbi + " to " + pythonHome.getAbsolutePath());
+        Log.d(TAG, "Unpacking Python with ABI " + myAbi + " to " + pythonHome.getAbsolutePath());
         unzipTo(new ZipInputStream(this.getAssets().open("pythonhome." + myAbi + ".zip")), pythonHome);
         File rubicon_java = dirs.get("rubicon_java");
 
-        Log.d(APP_LAUNCH_TAG, "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
+        Log.d(TAG, "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
         unzipTo(new ZipInputStream(this.getAssets().open("rubicon.zip")), rubicon_java);
         File userCodeDir = dirs.get("user_code");
 
-        Log.d(APP_LAUNCH_TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
+        Log.d(TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
         unpackAssetPrefix(getAssets(), "python", userCodeDir);
-        Log.d(APP_LAUNCH_TAG, "unpackPython() complete");
+        Log.d(TAG, "unpackPython() complete");
     }
 
     private void setPythonEnvVars(String pythonHome) throws IOException, ErrnoException {
-        Log.d(APP_LAUNCH_TAG, "setPythonEnvVars() start");
-        Log.v("python home", pythonHome);
+        Log.d(TAG, "setPythonEnvVars() start");
+        Log.v(TAG, "pythonHome=" + pythonHome);
         Context applicationContext = this.getApplicationContext();
         File cacheDir = applicationContext.getCacheDir();
 
@@ -113,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
         Os.setenv("LD_LIBRARY_PATH", this.getApplicationInfo().nativeLibraryDir, true);
         Os.setenv("PYTHONHOME", pythonHome, true);
         Os.setenv("ACTIVITY_CLASS_NAME", "org/beeware/android/MainActivity", true);
-        Log.d(APP_LAUNCH_TAG, "setPythonEnvVars() complete");
+        Log.d(TAG, "setPythonEnvVars() complete");
     }
 
     private void startPython(Map<String, File> dirs) throws Exception {
-        Log.d(APP_LAUNCH_TAG, "startPython() start");
+        Log.d(TAG, "startPython() start");
         this.unpackPython(dirs);
         String pythonHome = dirs.get("stdlib").getAbsolutePath();
         this.setPythonEnvVars(pythonHome);
@@ -125,24 +125,24 @@ public class MainActivity extends AppCompatActivity {
         // `app` is the last item in the sysPath list.
         String sysPath = (pythonHome + "/lib/python3.7/") + ":" + dirs.get("rubicon_java").getAbsolutePath() + ":"
                 + dirs.get("app_packages").getAbsolutePath() + ":" + dirs.get("app").getAbsolutePath();
-        Log.d(APP_LAUNCH_TAG, "Python.init() start");
+        Log.d(TAG, "Python.init() start");
         if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
         }
-        Log.d(APP_LAUNCH_TAG, "Python.init() complete");
+        Log.d(TAG, "Python.init() complete");
 
         // Run the app's main module, similar to `python -m`.
-        Log.d(APP_LAUNCH_TAG, "Python.run() start");
+        Log.d(TAG, "Python.run() start");
         Python.run("{{cookiecutter.module_name}}", new String[0]);
-        Log.d(APP_LAUNCH_TAG, "Python.run() end");
-        Log.d(APP_LAUNCH_TAG, "startPython() end");
+        Log.d(TAG, "Python.run() end");
+        Log.d(TAG, "startPython() end");
     }
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(APP_LAUNCH_TAG, "onCreate() start");
+        Log.d(TAG, "onCreate() start");
         super.onCreate(savedInstanceState);
         this.captureStdoutStderr();
-        Log.d("MainActivity.onCreate", "captured stdout/stderr");
+        Log.d(TAG, "onCreate(): captured stdout/stderr");
         LinearLayout layout = new LinearLayout(this);
         this.setContentView(layout);
         singletonThis = this;
@@ -150,27 +150,27 @@ public class MainActivity extends AppCompatActivity {
             Map<String, File> dirs = getPythonDirs();
             this.startPython(dirs);
         } catch (Exception e) {
-            Log.e("MainActivity", "Failed to create Python app", e);
+            Log.e(TAG, "Failed to create Python app", e);
             return;
         }
-        Log.d(APP_LAUNCH_TAG, "user code onCreate() start");
+        Log.d(TAG, "user code onCreate() start");
         pythonApp.onCreate();
-        Log.d(APP_LAUNCH_TAG, "user code onCreate() complete");
-        Log.d(APP_LAUNCH_TAG, "onCreate() complete");
+        Log.d(TAG, "user code onCreate() complete");
+        Log.d(TAG, "onCreate() complete");
     }
 
     protected void onStart() {
-        Log.d(APP_LAUNCH_TAG, "onStart() start");
+        Log.d(TAG, "onStart() start");
         super.onStart();
         pythonApp.onStart();
-        Log.d(APP_LAUNCH_TAG, "onStart() complete");
+        Log.d(TAG, "onStart() complete");
     }
 
     protected void onResume() {
-        Log.d(APP_LAUNCH_TAG, "onResume() start");
+        Log.d(TAG, "onResume() start");
         super.onResume();
         pythonApp.onResume();
-        Log.d(APP_LAUNCH_TAG, "onResume() complete");
+        Log.d(TAG, "onResume() complete");
     }
 
     private native boolean captureStdoutStderr();
