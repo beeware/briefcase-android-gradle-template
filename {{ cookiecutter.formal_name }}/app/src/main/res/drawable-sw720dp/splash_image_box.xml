@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:gravity="center"
-        android:width="360dp"
-        android:height="360dp"
+        android:width="720dp"
+        android:height="720dp"
         android:drawable="@drawable/launch"/>
 </layer-list>

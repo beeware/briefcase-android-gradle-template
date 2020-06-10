@@ -9,7 +9,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 <item
     android:gravity="center"
-    android:width="160dp"
-    android:height="160dp"
+    android:width="320dp"
+    android:height="320dp"
     android:drawable="@drawable/launch"/>
 </layer-list>
