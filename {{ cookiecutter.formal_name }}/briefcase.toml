@@ -33,6 +33,10 @@ icon.square.192 = "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
 # of images for devices at least 720 density-independent pixels of
 # width.
 #
+# Normal corresponds to a typical phone. Large corresponds to a
+# large phone, or phone-tablet hybrid (phablet). Xlarge corresponds
+# to a large tablet.
+#
 # In addition to the normal/large/xlarge physical size distinction,
 # we need to choose images appropriate for the device's current DPI.
 # Android defines a variety of screen DPI buckets; we use mdpi (1x),
@@ -44,8 +48,16 @@ icon.square.192 = "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
 # are the number in the splash image name (e.g., 320x320 for
 # splash.normal.320).
 #
-# See also
+# See also:
+# 
+# For definitions of device sizes:
 # https://developer.android.com/training/multiscreen/screensizes#TaskUseSizeQuali
+#
+# For examples of specific devices and their sizes & DPI:
+# https://material.io/resources/devices/
+#
+# For the relative frequency of normal vs. large vs. xlarge in real-world devices:
+# https://developer.android.com/about/dashboards/index.html
 splash.normal.320 = "app/src/main/res/drawable/launch.png"
 splash.normal.480 = "app/src/main/res/drawable-hdpi/launch.png"
 splash.normal.640 = "app/src/main/res/drawable-xhdpi/launch.png"
