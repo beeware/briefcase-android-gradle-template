@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -118,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
         File stdlibLastFilenamePath = paths.get("stdlib-last-filename");
         boolean cacheOk = false;
         if (stdlibLastFilenamePath.exists()) {
-            BufferedReader reader = Files.newBufferedReader(stdlibLastFilenamePath.toPath(), StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new
+FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
             String stdlibLastFilename = reader.readLine();
             if (stdlibLastFilename.equals(pythonHomeZipFilename)) {
                 cacheOk = true;
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "Unpacking Python stdlib due to cache miss on " + pythonHomeZipFilename);
             unzipTo(new ZipInputStream(this.getAssets().open(pythonHomeZipFilename)), pythonHome);
-            BufferedWriter writer = Files.newBufferedWriter(stdlibLastFilenamePath.toPath(), StandardCharsets.UTF_8);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
             writer.write(pythonHomeZipFilename, 0, pythonHomeZipFilename.length());
             writer.close();
         }
