@@ -26,6 +26,8 @@ import java.util.zip.ZipInputStream;
 import org.beeware.rubicon.Python;
 import org.jetbrains.annotations.Nullable;
 
+import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
+
 import static org.beeware.android.HelpersKt.unpackAssetPrefix;
 import static org.beeware.android.HelpersKt.unzipTo;
 
@@ -181,9 +183,11 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreate() start");
-        super.onCreate(savedInstanceState);
         this.captureStdoutStderr();
         Log.d(TAG, "onCreate(): captured stdout/stderr");
+        // Change away from the splash screen theme to the app theme.
+        setTheme(R.style.AppTheme);
+        super.onCreate(savedInstanceState);
         LinearLayout layout = new LinearLayout(this);
         this.setContentView(layout);
         singletonThis = this;
