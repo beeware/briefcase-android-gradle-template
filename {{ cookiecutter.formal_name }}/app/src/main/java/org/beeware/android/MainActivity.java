@@ -176,7 +176,7 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
 
         // Run the app's main module, similar to `python -m`.
         Log.d(TAG, "Python.run() start");
-        Python.run("{{cookiecutter.module_name}}", new String[0]);
+        Python.run("{{ cookiecutter.module_name }}", new String[0]);
         Log.d(TAG, "Python.run() end");
         Log.d(TAG, "startPython() end");
     }

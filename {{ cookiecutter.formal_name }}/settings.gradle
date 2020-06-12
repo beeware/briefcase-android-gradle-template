@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='{{cookiecutter.formal_name}}'
+rootProject.name='{{ cookiecutter.formal_name }}'
