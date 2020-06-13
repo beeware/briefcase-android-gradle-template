@@ -4,7 +4,9 @@
   "package_name": "com.example",
   "app_name": "appname",
   "formal_name": "App Name",
-  "splash_screen_background_color": "#FFFFFF",
+  "splash_background_color": "#FFFFFF",
+  "version": "1.0",
+  "version_code": "1",
   "_copy_without_render": [
     "gradlew",
     "gradle.bat",

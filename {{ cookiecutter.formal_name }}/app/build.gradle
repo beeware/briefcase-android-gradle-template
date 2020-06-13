@@ -8,8 +8,8 @@ android {
         applicationId "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode {{ cookiecutter.version_code }}
+        versionName "{{ cookiecutter.version }}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
