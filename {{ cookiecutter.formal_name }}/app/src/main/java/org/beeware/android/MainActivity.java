@@ -77,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
         // We cache the stdlib by checking the contents of this file.
         paths.put("stdlib-last-filename", new File(base.getAbsolutePath() + "/stdlib.last-filename"));
 
-        // `rubicon_java` is used to the required Rubicon module.
-        File rubicon_java = new File(base.getAbsolutePath() + "/rubicon-java/");
-        ensureDir(rubicon_java);
-        paths.put("rubicon_java", rubicon_java);
-
         // Put `user_code` into paths so we can unpack the assets into it.
         paths.put("user_code", new File(base.getAbsolutePath() + "/user_code/"));
 
@@ -137,10 +132,6 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
             writer.close();
         }
 
-        File rubicon_java = paths.get("rubicon_java");
-        Log.d(TAG, "Unpacking rubicon-java to " + rubicon_java.getAbsolutePath());
-        unzipTo(new ZipInputStream(this.getAssets().open("rubicon.zip")), rubicon_java);
-
         File userCodeDir = paths.get("user_code");
         Log.d(TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
         unpackAssetPrefix(getAssets(), "python", userCodeDir);
@@ -153,6 +144,7 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         Context applicationContext = this.getApplicationContext();
         File cacheDir = applicationContext.getCacheDir();
 
+        // Tell rubicon-java's Python code where to find the C library, to access it via ctypes.
         Os.setenv("RUBICON_LIBRARY", this.getApplicationInfo().nativeLibraryDir + "/librubicon.so", true);
         Os.setenv("TMPDIR", cacheDir.getAbsolutePath(), true);
         Os.setenv("LD_LIBRARY_PATH", this.getApplicationInfo().nativeLibraryDir, true);
@@ -167,7 +159,7 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         this.setPythonEnvVars(pythonHome);
 
         // `app` is the last item in the sysPath list.
-        String sysPath = (pythonHome + "/lib/python3.7/") + ":" + paths.get("rubicon_java").getAbsolutePath() + ":"
+        String sysPath = (pythonHome + "/lib/python3.7/") + ":"
                 + paths.get("app_packages").getAbsolutePath() + ":" + paths.get("app").getAbsolutePath();
         if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
