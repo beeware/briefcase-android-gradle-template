@@ -96,16 +96,21 @@ app icon on your phone, you won't see anything - because there isn't a visible
 console on an Android.
 
 To do something interesting, you'll need to work with the native Android system
-libraries to draw widgets and respond to screen taps. The `Rubicon`_ Objective
-C bridging library can be used to interface with the Android system libraries.
+libraries to draw widgets and respond to screen taps. The `Rubicon`_ Java
+bridging library can be used to interface with the Android system libraries.
 Alternatively, you could use a cross-platform widget toolkit that supports
 Android (such as `Toga`_) to provide a GUI for your application.
 
 Regardless of whether you use Toga, or you write an application natively, the
-template project will instantiate a Java try to instantiate a ``UIApplicationMain`` instance,
-using a class named ``PythonAppDelegate`` as the App delegate. If a class of
-that name can't be instantiated, the error raised will be logged, and the
-Python interpreter will be shut down.
+template project will run the `__main__` module associated with the app name
+that you provided when you generated the tempalte. That Python code must
+define an instance of ``org.beeware.android.IPythonApp``, and invoke
+``org.beeware.android.MainActivity.setPythonApp()`` to set that instance as the
+active Python app. This app will coordinate provides the hooks into the
+Android application lifecycle (``onCreate``, ``onResume`` and so on); it's
+up to you what your code does with those lifecycle hooks. If ``setPythonApp``
+is not set, an error will be logged, and the Python interpreter will be shut
+down.
 
 If you have any external library dependencies (like Toga, or anything other
 third-party library), you should install the library code into the
