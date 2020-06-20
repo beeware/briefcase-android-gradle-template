@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -158,8 +159,25 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         String pythonHome = paths.get("stdlib").getAbsolutePath();
         this.setPythonEnvVars(pythonHome);
 
+        Log.d(TAG, "Computing Python version.");
+        // Compute Python version number so that we can make sure it's first on sys.path when we
+        // configure sys.path with Python.init().
+        String[] libpythons = new File(this.getApplicationInfo().nativeLibraryDir).list(
+                new FilenameFilter() {
+                    @Override
+                    public boolean accept(File file, String s) {
+                        return s.startsWith("libpython") && s.endsWith(".so");
+                    }
+                }
+        );
+        if (libpythons.length == 0) {
+            throw new Exception("Unable to compute Python version");
+        }
+        String pythonVersion = libpythons[0].replace("libpython", "").replaceAll("m*.so", "");
+        Log.d(TAG, "Computed Python version: " + pythonVersion);
+
         // `app` is the last item in the sysPath list.
-        String sysPath = (pythonHome + "/lib/python3.7/") + ":"
+        String sysPath = (pythonHome + "/lib/python" + pythonVersion + "/") + ":"
                 + paths.get("app_packages").getAbsolutePath() + ":" + paths.get("app").getAbsolutePath();
         if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
