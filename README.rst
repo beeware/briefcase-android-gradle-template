@@ -4,7 +4,7 @@ Briefcase Android Gradle Template
 A `Cookiecutter <https://github.com/cookiecutter/cookiecutter/>`__ template for
 building Python apps that will run under Android.
 
-**This repository branch contains a template for Python 3.7**.
+**This repository branch contains a template for Python 3.8**.
 Other Python versions are available by cloning other branches of repository.
 
 Using this template
@@ -24,7 +24,7 @@ However, if you *do* want use this template directly...
 
 2. Run ``cookiecutter`` on the template::
 
-    $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template --checkout 3.7
+    $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template --checkout 3.8
 
    This will ask you for a number of details of your application, including the
    `name` of your application (which should be a valid PyPI identifier), and
@@ -96,16 +96,21 @@ app icon on your phone, you won't see anything - because there isn't a visible
 console on an Android.
 
 To do something interesting, you'll need to work with the native Android system
-libraries to draw widgets and respond to screen taps. The `Rubicon`_ Objective
-C bridging library can be used to interface with the Android system libraries.
+libraries to draw widgets and respond to screen taps. The `Rubicon`_ Java
+bridging library can be used to interface with the Android system libraries.
 Alternatively, you could use a cross-platform widget toolkit that supports
 Android (such as `Toga`_) to provide a GUI for your application.
 
 Regardless of whether you use Toga, or you write an application natively, the
-template project will instantiate a Java try to instantiate a ``UIApplicationMain`` instance,
-using a class named ``PythonAppDelegate`` as the App delegate. If a class of
-that name can't be instantiated, the error raised will be logged, and the
-Python interpreter will be shut down.
+template project will run the `__main__` module associated with the app name
+that you provided when you generated the tempalte. That Python code must
+define an instance of ``org.beeware.android.IPythonApp``, and invoke
+``org.beeware.android.MainActivity.setPythonApp()`` to set that instance as the
+active Python app. This app will coordinate provides the hooks into the
+Android application lifecycle (``onCreate``, ``onResume`` and so on); it's
+up to you what your code does with those lifecycle hooks. If ``setPythonApp``
+is not set, an error will be logged, and the Python interpreter will be shut
+down.
 
 If you have any external library dependencies (like Toga, or anything other
 third-party library), you should install the library code into the
@@ -113,7 +118,7 @@ third-party library), you should install the library code into the
 directory on a desktop Python install.
 
 .. _cookiecutter: https://github.com/cookiecutter/cookiecutter
-.. _Download the Python Android support package: https://briefcase-support.org/python?platform=android&version=3.7
+.. _Download the Python Android support package: https://briefcase-support.org/python?platform=android&version=3.8
 .. _Python-Android-support: https://github.com/beeware/Python-Android-support
 .. _Rubicon: https://github.com/beeware/rubicon-java
 .. _Toga: https://beeware.org/project/projects/libraries/toga
