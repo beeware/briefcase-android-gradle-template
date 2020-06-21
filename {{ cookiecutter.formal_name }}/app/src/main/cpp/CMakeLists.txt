@@ -5,40 +5,43 @@
 
 cmake_minimum_required(VERSION 3.6.0)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+# If you need to link against the CPython library,
+# uncomment the following block.
+# =======================================================
+# Set up the Python library
+#set(
+#    APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..
+#)
+#include_directories(
+#    ${APP_DIR}/include/python3.7m
+#)
+#add_library(
+#    python-lib
+#    SHARED IMPORTED
+#)
+#set_target_properties(
+#    python-lib
+#   PROPERTIES IMPORTED_LOCATION
+#    ${APP_DIR}/libs/${ANDROID_ABI}/libpython3.7m.so
+#)
+# =======================================================
 
-add_library( # Sets the name of the library.
-        native-lib
+# Find the Android native logging library
+find_library(
+    log-lib
+    log
+)
 
-        # Sets the library as a shared library.
-        SHARED
+# Define the sources and link requirements of the native library
+add_library(
+    native-lib
+    SHARED
+    native-lib.cpp
+)
 
-        # Provides a relative path to your source file(s).
-        native-lib.cpp)
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-find_library( # Sets the name of the path variable.
-        log-lib
-
-        # Specifies the name of the NDK library that
-        # you want CMake to locate.
-        log)
-
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
-
-target_link_libraries( # Specifies the target library.
-        native-lib
-
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib})
+target_link_libraries(
+    native-lib
+    ${log-lib}
+    # Uncomment the following line to link in the CPython library
+    # python-lib
+)
