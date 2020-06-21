@@ -10,13 +10,16 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
 /captures
 .externalNativeBuild
 .cxx
 # Python bytecode
 .pyc
-# Binary assets for BeeWare Python apps
+# Build products
+/build
+app/build
+# Files from BeeWare support package
+app/include/python3.*
 app/libs/rubicon.jar
 app/libs/*/libbz2.so
 app/libs/*/libssl1.1.so
@@ -28,4 +31,4 @@ app/libs/*/libcrypto1.1.so
 app/libs/*/libssl.so
 app/libs/*/libcrypto.so
 app/libs/*/liblzma.so
-app/src/main/assets/pythonhome.*.zip
+app/src/main/assets/stdlib/pythonhome.*.zip
