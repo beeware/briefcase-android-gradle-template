@@ -145,6 +145,10 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         Context applicationContext = this.getApplicationContext();
         File cacheDir = applicationContext.getCacheDir();
 
+        // Set stdout and stderr to be unbuffered. We are overriding stdout/stderr and would
+        // prefer to avoid delays.
+        Os.setenv("PYTHONUNBUFFERED", "1", true);
+
         // Tell rubicon-java's Python code where to find the C library, to access it via ctypes.
         Os.setenv("RUBICON_LIBRARY", this.getApplicationInfo().nativeLibraryDir + "/librubicon.so", true);
         Os.setenv("TMPDIR", cacheDir.getAbsolutePath(), true);
