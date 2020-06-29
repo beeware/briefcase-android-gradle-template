@@ -34,6 +34,12 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    aaptOptions {
+        // Use default ignore rule *except* allow directories starting with _,
+        // so that pyc files in __pycache__ directories flow through into apps.
+        // https://android.googlesource.com/platform/frameworks/base/+/b41af58f49d371cedf041443d20a1893f7f6c840/tools/aapt/AaptAssets.cpp#60
+        ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
 }
 
 dependencies {
