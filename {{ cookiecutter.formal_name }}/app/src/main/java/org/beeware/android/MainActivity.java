@@ -110,7 +110,7 @@ FileInputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             actualLastUpdateTime = String.valueOf(packageInfo.lastUpdateTime);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Unable to find package; using default actualLastUpdateTime: " + actualLastUpdateTime);
+            Log.e(TAG, "Unable to find package; using default actualLastUpdateTime");
         }
         if (storedLastUpdateTime != null && storedLastUpdateTime.equals(actualLastUpdateTime)) {
             Log.d(TAG, "unpackPython() complete: Exiting early due to lastUpdateTime match: " + storedLastUpdateTime);
