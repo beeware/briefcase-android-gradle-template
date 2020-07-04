@@ -1,6 +1,8 @@
 package org.beeware.android;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.system.ErrnoException;
@@ -92,6 +94,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void unpackPython(Map<String, File> paths) throws IOException {
+        // Try to find `lastUpdateTime` on disk; compare it to actual `lastUpdateTime` from package manager.
+        // https://developer.android.com/reference/android/content/pm/PackageInfo.html#lastUpdateTime
+        Context context = this.getApplicationContext();
+        File lastUpdateTimeFile = new File(context.getCacheDir(), "last-update-time");
+        String storedLastUpdateTime = null;
+        String actualLastUpdateTime = null;
+
+        if (lastUpdateTimeFile.exists()) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new
+FileInputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
+            storedLastUpdateTime = reader.readLine();
+        }
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            actualLastUpdateTime = String.valueOf(packageInfo.lastUpdateTime);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Unable to find package; using default actualLastUpdateTime");
+        }
+        if (storedLastUpdateTime != null && storedLastUpdateTime.equals(actualLastUpdateTime)) {
+            Log.d(TAG, "unpackPython() complete: Exiting early due to lastUpdateTime match: " + storedLastUpdateTime);
+            return;
+        }
+
         String myAbi = Build.SUPPORTED_ABIS[0];
         File pythonHome = paths.get("stdlib");
 
@@ -136,6 +161,12 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         File userCodeDir = paths.get("user_code");
         Log.d(TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
         unpackAssetPrefix(getAssets(), "python", userCodeDir);
+        if (actualLastUpdateTime != null) {
+            Log.d(TAG, "Replacing old lastUpdateTime = " + storedLastUpdateTime + " with actualLastUpdateTime = " + actualLastUpdateTime);
+            BufferedWriter timeWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
+            timeWriter.write(actualLastUpdateTime, 0, actualLastUpdateTime.length());
+            timeWriter.close();
+        }
         Log.d(TAG, "unpackPython() complete");
     }
 
@@ -144,6 +175,10 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         Log.v(TAG, "pythonHome=" + pythonHome);
         Context applicationContext = this.getApplicationContext();
         File cacheDir = applicationContext.getCacheDir();
+
+        // Set stdout and stderr to be unbuffered. We are overriding stdout/stderr and would
+        // prefer to avoid delays.
+        Os.setenv("PYTHONUNBUFFERED", "1", true);
 
         // Tell rubicon-java's Python code where to find the C library, to access it via ctypes.
         Os.setenv("RUBICON_LIBRARY", this.getApplicationInfo().nativeLibraryDir + "/librubicon.so", true);
