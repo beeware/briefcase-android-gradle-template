@@ -1,6 +1,7 @@
 package org.beeware.android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -261,6 +262,14 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         super.onResume();
         pythonApp.onResume();
         Log.d(TAG, "onResume() complete");
+    }
+	
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.d(TAG, "onActivityResult() start");
+        super.onActivityResult(requestCode, resultCode, data);
+        pythonApp.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult() complete");
     }
 
     private native boolean captureStdoutStderr();
