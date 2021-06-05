@@ -31,6 +31,7 @@ import org.beeware.rubicon.Python;
 
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
 
+import static org.beeware.android.Helpers.ensureDirExists;
 import static org.beeware.android.Helpers.unpackAssetPrefix;
 import static org.beeware.android.Helpers.unzipTo;
 
@@ -57,24 +58,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public static MainActivity singletonThis;
 
-    private File ensureDir(File dir) throws IOException {
-        if (dir.exists()) {
-            return dir;
-        }
-        boolean mkdirResult = dir.mkdirs();
-        if (!mkdirResult) {
-            throw new IOException("Unable to make directory " + dir.getAbsolutePath());
-        }
-        return dir;
-    }
-
     private Map<String, File> getPythonPaths() throws IOException {
         Map paths = new HashMap<String, File>();
         File base = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/python/");
 
         // `stdlib` is used as PYTHONHOME.
         File stdlib = new File(base.getAbsolutePath() + "/stdlib/");
-        ensureDir(stdlib);
+        ensureDirExists(stdlib);
         paths.put("stdlib", stdlib);
 
         // We cache the stdlib by checking the contents of this file.
@@ -102,8 +92,11 @@ public class MainActivity extends AppCompatActivity {
         String actualLastUpdateTime = null;
 
         if (lastUpdateTimeFile.exists()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new
-FileInputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    new FileInputStream(lastUpdateTimeFile), StandardCharsets.UTF_8
+                )
+            );
             storedLastUpdateTime = reader.readLine();
         }
         try {
@@ -135,35 +128,47 @@ FileInputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
         // file of the same name, then skip it. That way, the filename can serve as
         // a cache identifier.
         if (pythonHomeZipFilename == null) {
-            throw new RuntimeException("Unable to find file matching pythonhome.* and " +
-                                       abiZipSuffix);
+            throw new RuntimeException(
+                "Unable to find file matching pythonhome.* and " + abiZipSuffix
+            );
         }
         File stdlibLastFilenamePath = paths.get("stdlib-last-filename");
         boolean cacheOk = false;
         if (stdlibLastFilenamePath.exists()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new
-FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    new FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8
+                )
+            );
             String stdlibLastFilename = reader.readLine();
             if (stdlibLastFilename.equals(pythonHomeZipFilename)) {
                 cacheOk = true;
             }
         }
         if (cacheOk) {
-            Log.d(TAG, "Skipping unpack of Python stdlib due to cache hit on " + pythonHomeZipFilename);
+            Log.d(TAG, "Python stdlib already exists for " + pythonHomeZipFilename);
         } else {
-            Log.d(TAG, "Unpacking Python stdlib due to cache miss on " + pythonHomeZipFilename);
+            Log.d(TAG, "Unpacking Python stdlib " + pythonHomeZipFilename);
             unzipTo(new ZipInputStream(this.getAssets().open(pythonHomeZipFilename)), pythonHome);
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
+            BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(
+                    new FileOutputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8
+                )
+            );
             writer.write(pythonHomeZipFilename, 0, pythonHomeZipFilename.length());
             writer.close();
         }
 
         File userCodeDir = paths.get("user_code");
-        Log.d(TAG, "Unpacking Python assets to base dir " + userCodeDir.getAbsolutePath());
+        Log.d(TAG, "Unpacking Python assets to " + userCodeDir.getAbsolutePath());
         unpackAssetPrefix(getAssets(), "python", userCodeDir);
         if (actualLastUpdateTime != null) {
             Log.d(TAG, "Replacing old lastUpdateTime = " + storedLastUpdateTime + " with actualLastUpdateTime = " + actualLastUpdateTime);
-            BufferedWriter timeWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lastUpdateTimeFile), StandardCharsets.UTF_8));
+            BufferedWriter timeWriter = new BufferedWriter(
+                new OutputStreamWriter(
+                    new FileOutputStream(lastUpdateTimeFile), StandardCharsets.UTF_8
+                )
+            );
             timeWriter.write(actualLastUpdateTime, 0, actualLastUpdateTime.length());
             timeWriter.close();
         }

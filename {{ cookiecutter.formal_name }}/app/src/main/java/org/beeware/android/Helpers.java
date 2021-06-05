@@ -9,34 +9,35 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Helpers {
-    public static final String TAG = "Helpers";
+    public static final String TAG = "Briefcase";
 
     public static void unpackAssetPrefix(AssetManager assets, String assetPrefix, File outputDir) throws IOException {
-        Log.d(TAG, "Clearing out path " + outputDir.getAbsolutePath());
+        Log.d(TAG, "Clearing out old assets");
         deleteRecursively(outputDir);
+
         String [] list = assets.list(assetPrefix);
         if (list == null) {
-            throw new IOException("Unable to unpack assets");
+            throw new IOException("Unable to obtain asset list");
         }
         if (list.length == 0) {
             throw new IOException("No assets at prefix " + assetPrefix);
         }
         for (String file: list) {
-            unpackAssetPath(assets, assetPrefix + file.toString(), assetPrefix.length(), outputDir);
+            unpackAssetPath(assets, assetPrefix + "/" + file.toString(), assetPrefix.length(), outputDir);
         }
     }
 
-    private static void ensureDir(File dir) throws IOException  {
+    public static void ensureDirExists(File dir) throws IOException  {
         if (!dir.exists()) {
-            boolean success = dir.mkdirs();
-            if (!success) {
-                throw new IOException("Failed to mkdir ${dir.getAbsolutePath()}");
+            Log.d(TAG, "Creating dir " + dir.getAbsolutePath());
+            if (!dir.mkdirs()) {
+                throw new IOException("Failed to mkdir " + dir.getAbsolutePath());
             }
         }
     }
 
-    private static void copy(InputStream source, File targetPath) throws IOException {
-        ensureDir(targetPath.getParentFile());
+    private static void copyAsset(InputStream source, File targetPath) throws IOException {
+        Log.d(TAG, "Copying asset " + targetPath.getAbsolutePath());
         byte[] buffer = new byte[4096 * 64];
         int len = source.read(buffer);
         FileOutputStream target = new FileOutputStream(targetPath);
@@ -45,7 +46,6 @@ public class Helpers {
             len = source.read(buffer);
         }
         target.close();
-        Log.d(TAG, "Created " + targetPath.getAbsolutePath());
     }
 
     private static void unpackAssetPath(AssetManager assets, String assetPath, int assetPrefixLength, File outputDir) throws IOException {
@@ -56,7 +56,8 @@ public class Helpers {
         if (subPaths.length == 0) {
             // It's a file. Copy it.
             File outputFile = new File(outputDir.getAbsolutePath() + "/" + assetPath.substring(assetPrefixLength));
-            copy(assets.open(assetPath), outputFile);
+            ensureDirExists(outputFile.getParentFile());
+            copyAsset(assets.open(assetPath), outputFile);
         } else {
             for (String subPath: subPaths) {
                 unpackAssetPath(assets, assetPath + "/" + subPath, assetPrefixLength, outputDir);
@@ -65,6 +66,7 @@ public class Helpers {
     }
 
     private static boolean deleteRecursively(File dir) {
+        Log.d(TAG, "Deleting " + dir.getAbsolutePath());
         File[] allContents = dir.listFiles();
         if (allContents != null) {
             for (File file : allContents) {
@@ -76,34 +78,29 @@ public class Helpers {
 
     public static void unzipTo(ZipInputStream inputStream, File outputDir) throws IOException {
         if (outputDir.exists()) {
-            Log.d(TAG, "deleting recursively");
+            Log.d(TAG, "Clearing out old zip artefacts");
             deleteRecursively(outputDir);
-            Log.d(TAG, "deleting recursively done");
         }
-        if (!outputDir.mkdirs()) {
-            throw new IOException("Unable to mkdir " + outputDir.getAbsolutePath());
-        }
+        ensureDirExists(outputDir);
         ZipEntry zipEntry = inputStream.getNextEntry();
         byte[] buf = new byte[1024 * 1024 * 4];
         while (zipEntry != null) {
             File outputFile = new File(outputDir.getAbsolutePath() + "/" + zipEntry);
             if (zipEntry.isDirectory()) {
-                Log.d(TAG, "creating dir " + outputFile.getAbsolutePath());
-                boolean result = outputFile.mkdirs();
-                if (!result) {
-                    Log.d("unzipTo", "mkdirs result = " + result);
+                Log.d(TAG, "Unpacking dir " + outputFile.getAbsolutePath());
+                if (!outputFile.mkdirs()) {
+                    throw new IOException("Unable to mkdirs " + outputFile.getAbsolutePath());
                 }
-                zipEntry = inputStream.getNextEntry();
-                continue;
+            } else {
+                Log.d(TAG, "Unpacking file " + outputFile.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(outputFile.getAbsolutePath());
+                int len = inputStream.read(buf);
+                while (len > 0) {
+                    fos.write(buf, 0, len);
+                    len = inputStream.read(buf);
+                }
+                fos.close();
             }
-            Log.d(TAG, "about to create file " + outputFile.getAbsolutePath());
-            FileOutputStream fos = new FileOutputStream(outputFile.getAbsolutePath());
-            int len = inputStream.read(buf);
-            while (len > 0) {
-                fos.write(buf, 0, len);
-                len = inputStream.read(buf);
-            }
-            fos.close();
             zipEntry = inputStream.getNextEntry();
         }
         inputStream.closeEntry();
