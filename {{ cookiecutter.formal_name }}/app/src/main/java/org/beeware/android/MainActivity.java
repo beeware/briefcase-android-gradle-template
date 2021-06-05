@@ -28,12 +28,11 @@ import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 import org.beeware.rubicon.Python;
-import org.jetbrains.annotations.Nullable;
 
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
 
-import static org.beeware.android.HelpersKt.unpackAssetPrefix;
-import static org.beeware.android.HelpersKt.unzipTo;
+import static org.beeware.android.Helpers.unpackAssetPrefix;
+import static org.beeware.android.Helpers.unzipTo;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -227,7 +226,7 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         Log.d(TAG, "startPython() end");
     }
 
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate() start");
         this.captureStdoutStderr();
         Log.d(TAG, "onCreate(): captured stdout/stderr");
@@ -263,7 +262,7 @@ FileInputStream(stdlibLastFilenamePath), StandardCharsets.UTF_8));
         pythonApp.onResume();
         Log.d(TAG, "onResume() complete");
     }
-	
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.d(TAG, "onActivityResult() start");
