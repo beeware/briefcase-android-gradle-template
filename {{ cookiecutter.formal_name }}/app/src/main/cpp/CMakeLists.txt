@@ -26,6 +26,10 @@ cmake_minimum_required(VERSION 3.6.0)
 #)
 # =======================================================
 
+project(
+    {{ cookiecutter.formal_name }}
+)
+
 # Find the Android native logging library
 find_library(
     log-lib
