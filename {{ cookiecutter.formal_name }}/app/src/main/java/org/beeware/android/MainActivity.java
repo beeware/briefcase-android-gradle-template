@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -274,6 +276,22 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         pythonApp.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult() complete");
+    }
+
+    public boolean onOptionsItemSelected(MenuItem menuitem) {
+        boolean result;
+        Log.d(TAG, "onOptionsItemSelected() start");
+        result = pythonApp.onOptionsItemSelected(menuitem);
+        Log.d(TAG, "onOptionsItemSelected() complete");
+        return result;
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean result;
+        Log.d(TAG, "onPrepareOptionsMenu() start");
+        result = pythonApp.onPrepareOptionsMenu(menu);
+        Log.d(TAG, "onPrepareOptionsMenu() complete");
+        return result;
     }
 
     private native boolean captureStdoutStderr();
