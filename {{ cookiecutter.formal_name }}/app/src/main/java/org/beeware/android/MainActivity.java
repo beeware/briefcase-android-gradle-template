@@ -294,6 +294,19 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    protected void onSaveInstanceState (Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState() start");
+        pythonApp.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState() complete");
+    }
+
+    protected void onRestoreInstanceState (Bundle savedInstanceState)
+    {
+        Log.d(TAG, "onRestoreInstanceState() start");
+        pythonApp.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState() complete");
+    }
+
     private native boolean captureStdoutStderr();
 
     static {
