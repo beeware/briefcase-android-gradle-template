@@ -5,10 +5,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public interface IPythonApp {
-    void onCreate();
-    void onResume();
-    void onStart();
-    void onActivityResult(int requestCode, int resultCode, Intent data);
-    public boolean onOptionsItemSelected(MenuItem menuitem);
-    public boolean onPrepareOptionsMenu(Menu menu);
+    public void getPythonWinById(WinActivity winActivity);
+    public void getMainWinId(MainActivity mainActivity);
 }

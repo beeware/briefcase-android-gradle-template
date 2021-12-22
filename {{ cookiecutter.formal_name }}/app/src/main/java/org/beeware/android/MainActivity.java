@@ -13,8 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -37,10 +35,11 @@ import static org.beeware.android.Helpers.ensureDirExists;
 import static org.beeware.android.Helpers.unpackAssetPrefix;
 import static org.beeware.android.Helpers.unzipTo;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
 
+public class MainActivity extends WinActivity {
     // To profile app launch, use `adb -s MainActivity`; look for "onCreate() start" and "onResume() completed".
-    private String TAG = "MainActivity";
+
     private static IPythonApp pythonApp;
 
     /**
@@ -52,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     public static void setPythonApp(IPythonApp app) {
         pythonApp = app;
+    }
+
+    public static IPythonApp getPythonApp(){
+        return pythonApp;
     }
 
     /**
@@ -234,12 +237,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
+        this.TAG = "MainActivity";
         Log.d(TAG, "onCreate() start");
         this.captureStdoutStderr();
         Log.d(TAG, "onCreate(): captured stdout/stderr");
         // Change away from the splash screen theme to the app theme.
         setTheme(R.style.AppTheme);
-        super.onCreate(savedInstanceState);
         LinearLayout layout = new LinearLayout(this);
         this.setContentView(layout);
         singletonThis = this;
@@ -250,49 +253,11 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Failed to create Python app", e);
             return;
         }
-        Log.d(TAG, "user code onCreate() start");
-        pythonApp.onCreate();
-        Log.d(TAG, "user code onCreate() complete");
-        Log.d(TAG, "onCreate() complete");
-    }
 
-    protected void onStart() {
-        Log.d(TAG, "onStart() start");
-        super.onStart();
-        pythonApp.onStart();
-        Log.d(TAG, "onStart() complete");
-    }
-
-    protected void onResume() {
-        Log.d(TAG, "onResume() start");
-        super.onResume();
-        pythonApp.onResume();
-        Log.d(TAG, "onResume() complete");
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        Log.d(TAG, "onActivityResult() start");
-        super.onActivityResult(requestCode, resultCode, data);
-        pythonApp.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult() complete");
-    }
-
-    public boolean onOptionsItemSelected(MenuItem menuitem) {
-        boolean result;
-        Log.d(TAG, "onOptionsItemSelected() start");
-        result = pythonApp.onOptionsItemSelected(menuitem);
-        Log.d(TAG, "onOptionsItemSelected() complete");
-        return result;
-    }
-
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean result;
-        Log.d(TAG, "onPrepareOptionsMenu() start");
-        result = pythonApp.onPrepareOptionsMenu(menu);
-        Log.d(TAG, "onPrepareOptionsMenu() complete");
-        return result;
-    }
+        pythonApp.getMainWinId(this);
+        System.out.println(pythonWinId);
+        super.onCreate(savedInstanceState);
+   }
 
     private native boolean captureStdoutStderr();
 
