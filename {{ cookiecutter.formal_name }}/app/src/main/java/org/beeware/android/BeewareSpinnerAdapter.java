@@ -25,11 +25,10 @@ implements android.widget.SpinnerAdapter
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        // android.R.layout.simple_spinner_item is default layout in resources of android.
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(
-                    android.R.layout.simple_spinner_item, parent, false);
+                    android.R.layout.simple_spinner_dropdown_item, parent, false);
         }
         // android.R.id.text1 is default text view in resource of the android.
         TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
