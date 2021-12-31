@@ -218,9 +218,13 @@ public class MainActivity extends AppCompatActivity {
         String pythonVersion = libpythons[0].replace("libpython", "").replaceAll("m*.so", "");
         Log.d(TAG, "Computed Python version: " + pythonVersion);
 
+        String abi = Build.SUPPORTED_ABIS[0];
+        String app_packages = paths.get("app_packages").getAbsolutePath();
         // `app` is the last item in the sysPath list.
         String sysPath = (pythonHome + "/lib/python" + pythonVersion + "/") + ":"
-                + paths.get("app_packages").getAbsolutePath() + ":" + paths.get("app").getAbsolutePath();
+                + app_packages + ":"
+                + app_packages + "/" + abi + ":"
+                + paths.get("app").getAbsolutePath();
         if (Python.init(pythonHome, sysPath, null) != 0) {
             throw new Exception("Unable to start Python interpreter.");
         }
