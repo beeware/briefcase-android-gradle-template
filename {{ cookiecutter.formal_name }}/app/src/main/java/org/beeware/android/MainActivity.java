@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,7 +38,8 @@ import static org.beeware.android.Helpers.ensureDirExists;
 import static org.beeware.android.Helpers.unpackAssetPrefix;
 import static org.beeware.android.Helpers.unzipTo;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+    implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     // To profile app launch, use `adb -s MainActivity`; look for "onCreate() start" and "onResume() completed".
     private String TAG = "MainActivity";
@@ -298,5 +300,26 @@ public class MainActivity extends AppCompatActivity {
 
     static {
         System.loadLibrary("native-lib");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            // Accept any requestCode.
+            default:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    for (String permission: permissions) {
+                        Log.d(TAG, "Permission granted: " + permission);
+                    }
+                }  else {
+                    for (String permission: permissions) {
+                        Log.d(TAG, "Permission denied: " + permission);
+                    }
+                }
+                return;
+        }
     }
 }
