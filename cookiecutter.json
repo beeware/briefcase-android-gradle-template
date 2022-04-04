@@ -1,5 +1,6 @@
 {
   "formal_name": "App Name",
+  "safe_formal_name": "{{ cookiecutter.formal_name }}",
   "app_name": "{{ cookiecutter.formal_name|lower|replace(' ', '-') }}",
   "module_name": "{{ cookiecutter.app_name|replace('-', '_') }}",
   "bundle": "com.example",
