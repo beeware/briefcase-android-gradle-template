@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
         <activity
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:name="org.beeware.android.MainActivity"
             android:exported="true">
             <intent-filter>
