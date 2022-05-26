@@ -4,7 +4,7 @@ Briefcase Android Gradle Template
 A `Cookiecutter <https://github.com/cookiecutter/cookiecutter/>`__ template for
 building Python apps that will run under Android.
 
-**This repository branch contains a template for Python 3.11**.
+**This repository branch contains a template for Python 3.9**.
 Other Python versions are available by cloning other branches of repository.
 
 Using this template
@@ -24,7 +24,7 @@ However, if you *do* want use this template directly...
 
 2. Run ``cookiecutter`` on the template::
 
-    $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template --checkout 3.11
+    $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template --checkout 3.9
 
    This will ask you for a number of details of your application, including the
    `name` of your application (which should be a valid PyPI identifier), and
@@ -118,7 +118,7 @@ third-party library), you should install the library code into the
 directory on a desktop Python install.
 
 .. _cookiecutter: https://github.com/cookiecutter/cookiecutter
-.. _Download the Python support package for Android: https://briefcase-support.org/python?platform=android&version=3.11
+.. _Download the Python support package for Android: https://briefcase-support.org/python?platform=android&version=3.9
 .. _Python-Android-support: https://github.com/beeware/Python-Android-support
 .. _Rubicon: https://github.com/beeware/rubicon-java
 .. _Toga: https://beeware.org/project/projects/libraries/toga
