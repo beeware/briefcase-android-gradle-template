@@ -4,7 +4,11 @@ android {
     compileSdkVersion 32
     defaultConfig {
         applicationId "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
-        minSdkVersion 21
+
+        // JNI crashes may happen on older versions:
+        // https://github.com/beeware/rubicon-java/issues/74
+        minSdkVersion 26
+
         targetSdkVersion 32
         versionCode {{ cookiecutter.version_code }}
         versionName "{{ cookiecutter.version }}"
@@ -40,6 +44,12 @@ android {
         // so that pyc files in __pycache__ directories flow through into apps.
         // https://android.googlesource.com/platform/frameworks/base/+/b41af58f49d371cedf041443d20a1893f7f6c840/tools/aapt/AaptAssets.cpp#60
         ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+    packagingOptions {
+        jniLibs {
+            // MainActivity requires libpython to be extracted as a separate file.
+            useLegacyPackaging true
+        }
     }
 }
 
