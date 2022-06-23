@@ -10,8 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
-        <activity
-            android:configChanges="orientation|screenSize|keyboardHidden"
+      <!-- https://developer.android.com/guide/topics/resources/runtime-changes#HandlingTheChange -->
+      <activity
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:name="org.beeware.android.MainActivity"
             android:exported="true">
             <intent-filter>

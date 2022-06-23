@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.system.ErrnoException;
@@ -276,6 +277,13 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         pythonApp.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult() complete");
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.d(TAG, "onConfigurationChanged() start");
+        super.onConfigurationChanged(newConfig);
+        pythonApp.onConfigurationChanged(newConfig);
+        Log.d(TAG, "onConfigurationChanged() complete");
     }
 
     public boolean onOptionsItemSelected(MenuItem menuitem) {
