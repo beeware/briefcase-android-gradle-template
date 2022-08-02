@@ -10,8 +10,11 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.chaquo.python.Kwarg;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+
+import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
 
 
 public class MainActivity extends AppCompatActivity {
