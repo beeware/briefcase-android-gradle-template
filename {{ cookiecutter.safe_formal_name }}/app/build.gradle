@@ -1,24 +1,32 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.chaquo.python'
 
 android {
     compileSdkVersion 32
     defaultConfig {
         applicationId "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
-
-        // JNI crashes may happen on older versions:
-        // https://github.com/beeware/rubicon-java/issues/74
-        minSdkVersion 26
-
-        targetSdkVersion 32
         versionCode {{ cookiecutter.version_code }}
         versionName "{{ cookiecutter.version }}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        minSdkVersion 16
+        targetSdkVersion 32
+
+        python {
+            pip {
+                install "-r", "requirements.txt"
+            }
+        }
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++14"
             }
         }
+        ndk {
+            abiFilters "arm64-v8a", "armeabi-v7a", "x86_64"
+        }
     }
+
     compileOptions {
       sourceCompatibility JavaVersion.VERSION_1_8
       targetCompatibility JavaVersion.VERSION_1_8
@@ -36,19 +44,10 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
-    aaptOptions {
-        // Use default ignore rule *except* allow directories starting with _,
-        // so that pyc files in __pycache__ directories flow through into apps.
-        // https://android.googlesource.com/platform/frameworks/base/+/b41af58f49d371cedf041443d20a1893f7f6c840/tools/aapt/AaptAssets.cpp#60
-        ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
-    }
-    packagingOptions {
-        jniLibs {
-            // MainActivity requires libpython to be extracted as a separate file.
-            useLegacyPackaging true
+            python.srcDirs = [
+                "src/main/python",  // App code
+                "src/main/python-briefcase",  // Template code
+            ]
         }
     }
 }
@@ -60,9 +59,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation files('libs/rubicon.jar')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-}
-repositories {
-    mavenCentral()
 }

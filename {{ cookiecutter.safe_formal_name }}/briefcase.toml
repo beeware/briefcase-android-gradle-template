@@ -1,7 +1,6 @@
 [paths]
-app_path = "app/src/main/assets/python/app"
-app_packages_path = "app/src/main/assets/python/app_packages"
-support_path = "app"
+app_path = "app/src/main/python"
+app_requirements_path = "app/requirements.txt"
 
 icon.round.48 = "app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
 icon.round.72 = "app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
