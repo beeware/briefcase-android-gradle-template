@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.chaquo.python.Kwarg;
+import com.chaquo.python.PyException;
+import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     // To profile app launch, use `adb -s MainActivity`; look for "onCreate() start" and "onResume() completed".
     private String TAG = "MainActivity";
-    private static IPythonApp pythonApp;
+    private static PyObject pythonApp;
 
     /**
      * This method is called by `app.__main__` over JNI in Python when the BeeWare
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unused")
     public static void setPythonApp(IPythonApp app) {
-        pythonApp = app;
+        pythonApp = PyObject.fromJava(app);
     }
 
     /**
@@ -63,23 +65,21 @@ public class MainActivity extends AppCompatActivity {
                                        new Kwarg("run_name", "__main__"),
                                        new Kwarg("alter_sys", true));
 
-        Log.d(TAG, "user code onCreate() start");
-        pythonApp.onCreate();
-        Log.d(TAG, "user code onCreate() complete");
+        userCode("onCreate");
         Log.d(TAG, "onCreate() complete");
     }
 
     protected void onStart() {
         Log.d(TAG, "onStart() start");
         super.onStart();
-        pythonApp.onStart();
+        userCode("onStart");
         Log.d(TAG, "onStart() complete");
     }
 
     protected void onResume() {
         Log.d(TAG, "onResume() start");
         super.onResume();
-        pythonApp.onResume();
+        userCode("onResume");
         Log.d(TAG, "onResume() complete");
     }
 
@@ -87,31 +87,46 @@ public class MainActivity extends AppCompatActivity {
     {
         Log.d(TAG, "onActivityResult() start");
         super.onActivityResult(requestCode, resultCode, data);
-        pythonApp.onActivityResult(requestCode, resultCode, data);
+        userCode("onActivityResult", requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult() complete");
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
         Log.d(TAG, "onConfigurationChanged() start");
         super.onConfigurationChanged(newConfig);
-        pythonApp.onConfigurationChanged(newConfig);
+        userCode("onConfigurationChanged", newConfig);
         Log.d(TAG, "onConfigurationChanged() complete");
     }
 
     public boolean onOptionsItemSelected(MenuItem menuitem) {
-        boolean result;
         Log.d(TAG, "onOptionsItemSelected() start");
-        result = pythonApp.onOptionsItemSelected(menuitem);
+        PyObject pyResult = userCode("onOptionsItemSelected", menuitem);
+        boolean result = (pyResult == null) ? false : pyResult.toBoolean();
         Log.d(TAG, "onOptionsItemSelected() complete");
         return result;
     }
 
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean result;
         Log.d(TAG, "onPrepareOptionsMenu() start");
-        result = pythonApp.onPrepareOptionsMenu(menu);
+        PyObject pyResult = userCode("onPrepareOptionsMenu", menu);
+        boolean result = (pyResult == null) ? false : pyResult.toBoolean();
         Log.d(TAG, "onPrepareOptionsMenu() complete");
         return result;
+    }
+
+    private PyObject userCode(String methodName, Object... args) {
+        if (pythonApp == null) {
+            // Could be a non-graphical app such as Python-support-testbed.
+            return null;
+        }
+        try {
+            return pythonApp.callAttr(methodName, args);
+        } catch (PyException e) {
+            if (e.getMessage().startsWith("NotImplementedError")) {
+                return null;
+            }
+            throw e;
+        }
     }
 
     private native boolean captureStdoutStderr();
