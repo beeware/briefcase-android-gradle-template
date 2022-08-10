@@ -9,7 +9,10 @@ android {
         versionName "{{ cookiecutter.version }}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        minSdkVersion 16
+        // Briefcase currently requires API level 24 for the `pidof` command, and the `--pid`
+        // argument to `adb logcat`. This supports over 90% of active devices
+        // (https://github.com/beeware/rubicon-java/issues/74).
+        minSdkVersion 24
         targetSdkVersion 32
 
         python {
