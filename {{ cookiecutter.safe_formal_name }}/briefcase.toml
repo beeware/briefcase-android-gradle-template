@@ -1,3 +1,4 @@
+# Generated using Python {{ cookiecutter.python_version }}
 [paths]
 app_path = "app/src/main/python"
 app_requirements_path = "app/requirements.txt"

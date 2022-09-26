@@ -8,6 +8,7 @@
   "splash_background_color": "#FFFFFF",
   "version": "1.0",
   "version_code": "10000",
+  "python_version": "3.X.0",
   "_copy_without_render": [
     "gradlew",
     "gradle.bat",
@@ -15,5 +16,8 @@
     "gradle/wrapper/gradle-wrapper.jar",
     ".gitignore",
     "*.png"
+  ],
+  "_extensions": [
+      "briefcase.integrations.cookiecutter.PythonVersionExtension"
   ]
 }
