@@ -1,9 +1,7 @@
 # Generated using Python {{ cookiecutter.python_version }}
 [paths]
-app_path = "app/src/main/assets/python/app"
-app_packages_path = "app/src/main/assets/python/app_packages"
-support_path = "app"
-{{ {"3.8": "support_revision = 5", "3.9": "support_revision = 3", "3.10": "support_revision = 2"}.get(cookiecutter.python_version|py_tag, "") }}
+app_path = "app/src/main/python"
+app_requirements_path = "app/requirements.txt"
 
 icon.round.48 = "app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
 icon.round.72 = "app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
