@@ -60,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
             Python.start(new AndroidPlatform(this));
         }
         Python py = Python.getInstance();
-        Log.d(TAG, "Running main module");
-        py.getModule("runpy").callAttr("run_module", "{{ cookiecutter.module_name }}",
-                                       new Kwarg("run_name", "__main__"),
-                                       new Kwarg("alter_sys", true));
+        Log.d(TAG, "Running main module " + getString(R.string.main_module));
+        py.getModule("runpy").callAttr(
+            "run_module",
+            getString(R.string.main_module),
+            new Kwarg("run_name", "__main__"),
+            new Kwarg("alter_sys", true)
+        );
 
         userCode("onCreate");
         Log.d(TAG, "onCreate() complete");

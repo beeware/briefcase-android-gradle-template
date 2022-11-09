@@ -2,6 +2,7 @@
 [paths]
 app_path = "app/src/main/python"
 app_requirements_path = "app/requirements.txt"
+metadata_resource_path = "app/src/main/res/values/briefcase.xml"
 
 icon.round.48 = "app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
 icon.round.72 = "app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
