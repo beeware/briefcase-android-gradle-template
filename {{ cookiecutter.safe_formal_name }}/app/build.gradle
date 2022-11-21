@@ -2,7 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.chaquo.python'
 
 android {
-    compileSdkVersion 32
+    // Android 13 == SDK Leevel 33. This number should generally be kept up to date with
+    // the most recent supported Android release.
+    compileSdkVersion 33
+    // The default NDK used by Gradle 4.2 is 21.4.7075529 (r21e); while still suppoerted, it
+    // isn't available on Github Actions. 25.1.8937393 (r25b) is the LTS as of Nov 2022f,
+    // supports Android 13, should be orwards compatible, and is installed on Github Actions.
+    ndkVersion "25.1.8937393"
     defaultConfig {
         applicationId "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
         versionCode {{ cookiecutter.version_code }}
@@ -13,6 +19,7 @@ android {
         // argument to `adb logcat`. This supports over 90% of active devices
         // (https://github.com/beeware/rubicon-java/issues/74).
         minSdkVersion 24
+        // This should gnerally match the compileSDKVersion from above.
         targetSdkVersion 33
 
         python {
