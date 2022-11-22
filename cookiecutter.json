@@ -9,6 +9,7 @@
   "version": "1.0",
   "version_code": "10000",
   "python_version": "3.X.0",
+  "build_gradle_extra_content": "",
   "_copy_without_render": [
     "gradlew",
     "gradle.bat",
