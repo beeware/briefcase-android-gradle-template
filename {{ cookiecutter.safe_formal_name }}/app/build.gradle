@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.chaquo.python'
 
 android {
-    // Android 13 == SDK Leevel 33. This number should generally be kept up to date with
+    // Android 13 == SDK Level 33. This number should generally be kept up to date with
     // the most recent supported Android release.
     compileSdkVersion 33
     // The default NDK used by Gradle 4.2 is 21.4.7075529 (r21e); while still suppoerted, it
@@ -15,7 +15,7 @@ android {
         versionName "{{ cookiecutter.version }}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // Briefcase currently requires API level 24 for the `pidof` command, and the `--pid`
+        // Briefcase currently requires API Level 24 for the `pidof` command, and the `--pid`
         // argument to `adb logcat`. This supports over 90% of active devices
         // (https://github.com/beeware/rubicon-java/issues/74).
         minSdkVersion 24
