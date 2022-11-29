@@ -91,6 +91,9 @@ class AndroidEventLoop(asyncio.SelectorEventLoop):
         )
         asyncio.events._set_running_loop(self)
 
+        # Schedule any tasks which were added before the loop started.
+        self.enqueue_android_wakeup_for_delayed_tasks()
+
     def enqueue_android_wakeup_for_delayed_tasks(self):
         """Ask Android to wake us up when delayed tasks are ready to be handled.
 
