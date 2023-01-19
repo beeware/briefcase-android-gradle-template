@@ -24,6 +24,10 @@ android {
             pip {
                 install "-r", "requirements.txt"
             }
+
+            // pytest and unittest both require individual .py files for test discovery.
+            // This is the package name used by briefcase-template.
+            extractPackages "tests"
         }
         ndk {
             // Chaquopy also supports x86, but it's not very useful anymore, so we'll
