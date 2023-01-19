@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate() start");
-        this.captureStdoutStderr();
-        Log.d(TAG, "onCreate(): captured stdout/stderr");
         // Change away from the splash screen theme to the app theme.
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
@@ -57,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Python already started");
         } else {
             Log.d(TAG, "Starting Python");
-            Python.start(new AndroidPlatform(this));
+            AndroidPlatform platform = new AndroidPlatform(this);
+            platform.redirectStdioToLogcat();
+            Python.start(platform);
         }
         Python py = Python.getInstance();
         Log.d(TAG, "Running main module " + getString(R.string.main_module));
@@ -130,11 +130,5 @@ public class MainActivity extends AppCompatActivity {
             }
             throw e;
         }
-    }
-
-    private native boolean captureStdoutStderr();
-
-    static {
-        System.loadLibrary("native-lib");
     }
 }
