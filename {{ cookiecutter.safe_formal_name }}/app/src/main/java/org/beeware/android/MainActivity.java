@@ -16,6 +16,11 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
 
 
@@ -60,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
             Python.start(platform);
         }
         Python py = Python.getInstance();
+
+        String argvStr = getIntent().getStringExtra("org.beeware.ARGV");
+        if (argvStr != null) {
+            try {
+                JSONArray argvJson = new JSONArray(argvStr);
+                List<PyObject> sysArgv = py.getModule("sys").get("argv").asList();
+                for (int i = 0; i < argvJson.length(); i++) {
+                    sysArgv.add(PyObject.fromJava(argvJson.getString(i)));
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         Log.d(TAG, "Running main module " + getString(R.string.main_module));
         py.getModule("runpy").callAttr(
             "run_module",
