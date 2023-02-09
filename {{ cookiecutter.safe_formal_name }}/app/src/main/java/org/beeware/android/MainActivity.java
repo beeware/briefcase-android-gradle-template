@@ -56,26 +56,28 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(layout);
         singletonThis = this;
 
+        Python py;
         if (Python.isStarted()) {
             Log.d(TAG, "Python already started");
+            py = Python.getInstance();
         } else {
             Log.d(TAG, "Starting Python");
             AndroidPlatform platform = new AndroidPlatform(this);
             platform.redirectStdioToLogcat();
             Python.start(platform);
-        }
-        Python py = Python.getInstance();
+            py = Python.getInstance();
 
-        String argvStr = getIntent().getStringExtra("org.beeware.ARGV");
-        if (argvStr != null) {
-            try {
-                JSONArray argvJson = new JSONArray(argvStr);
-                List<PyObject> sysArgv = py.getModule("sys").get("argv").asList();
-                for (int i = 0; i < argvJson.length(); i++) {
-                    sysArgv.add(PyObject.fromJava(argvJson.getString(i)));
+            String argvStr = getIntent().getStringExtra("org.beeware.ARGV");
+            if (argvStr != null) {
+                try {
+                    JSONArray argvJson = new JSONArray(argvStr);
+                    List<PyObject> sysArgv = py.getModule("sys").get("argv").asList();
+                    for (int i = 0; i < argvJson.length(); i++) {
+                        sysArgv.add(PyObject.fromJava(argvJson.getString(i)));
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
             }
         }
 
