@@ -1,4 +1,7 @@
 # Generated using Python {{ cookiecutter.python_version }}
+[briefcase]
+target_version = "0.3.15"
+
 [paths]
 app_path = "app/src/main/python"
 app_requirements_path = "app/requirements.txt"
@@ -48,10 +51,10 @@ icon.square.192 = "app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
 # See also:
 #
 # For definitions of device sizes:
-# https://developer.android.com/training/multiscreen/screensizes#TaskUseSizeQuali
+# https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes#TaskUseSizeQuali
 #
 # For examples of specific devices and their sizes & DPI:
-# https://material.io/resources/devices/
+# https://material.io/blog/device-metrics
 #
 # For the relative frequency of normal vs. large vs. xlarge in real-world
 # devices: https://developer.android.com/about/dashboards/index.html
