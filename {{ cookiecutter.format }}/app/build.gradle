@@ -6,6 +6,8 @@ android {
     // the most recent supported Android release.
     compileSdkVersion 33
 
+    namespace "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
+
     defaultConfig {
         applicationId "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
         versionCode {{ cookiecutter.version_code }}
