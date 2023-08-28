@@ -107,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onResume() complete");
     }
 
-    public void onWindowFocusChanged(boolean isAppInFocus) {
+    public void onWindowFocusChanged(boolean hasFocus) {
         Log.d(TAG, "onWindowFocusChanged() start");
-        super.onWindowFocusChanged(isAppInFocus);
-        userCode("onWindowFocusChanged", isAppInFocus);
+        super.onWindowFocusChanged(hasFocus);
+        userCode("onWindowFocusChanged", hasFocus);
         Log.d(TAG, "onWindowFocusChanged() complete");
     }
 

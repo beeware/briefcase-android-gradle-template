@@ -9,7 +9,7 @@ public interface IPythonApp {
     void onCreate();
     void onResume();
     void onStart();
-    void onWindowFocusChanged(boolean isAppInFocus);
+    void onWindowFocusChanged(boolean hasFocus);
     void onActivityResult(int requestCode, int resultCode, Intent data);
     void onConfigurationChanged(Configuration newConfig);
     boolean onOptionsItemSelected(MenuItem menuitem);
