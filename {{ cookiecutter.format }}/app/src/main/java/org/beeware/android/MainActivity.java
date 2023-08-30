@@ -107,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onResume() complete");
     }
 
+    protected void onPause() {
+        Log.d(TAG, "onPause() start");
+        super.onPause();
+        userCode("onPause");
+        Log.d(TAG, "onPause() complete");
+    }
+
     public void onTopResumedActivityChanged (boolean isTopResumedActivity){
         Log.d(TAG, "onTopResumedActivityChanged() start");
         super.onTopResumedActivityChanged(isTopResumedActivity);
