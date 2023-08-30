@@ -151,7 +151,12 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
         try {
-            return pythonApp.callAttr(methodName, args);
+            if (pythonApp.containsKey(methodName)) {
+                return pythonApp.callAttr(methodName, args);
+            } else {
+                // Handle the case where the method doesn't exist
+                return null;
+            }
         } catch (PyException e) {
             if (e.getMessage().startsWith("NotImplementedError")) {
                 return null;
