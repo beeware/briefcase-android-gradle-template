@@ -107,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onResume() complete");
     }
 
-    public void onWindowFocusChanged(boolean hasFocus) {
-        Log.d(TAG, "onWindowFocusChanged() start");
-        super.onWindowFocusChanged(hasFocus);
-        userCode("onWindowFocusChanged", hasFocus);
-        Log.d(TAG, "onWindowFocusChanged() complete");
+    public void onTopResumedActivityChanged (boolean isTopResumedActivity){
+        Log.d(TAG, "onTopResumedActivityChanged() start");
+        super.onTopResumedActivityChanged(isTopResumedActivity);
+        userCode("onTopResumedActivityChanged", isTopResumedActivity);
+        Log.d(TAG, "onTopResumedActivityChanged() complete");
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
