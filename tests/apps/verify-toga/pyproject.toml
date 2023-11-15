@@ -17,6 +17,6 @@ requires = [
 
 [tool.briefcase.app.verify-toga.android]
 requires = [
-    'toga-android>=0.3.0.dev38'
+    'toga-android~=0.4.0'
 ]
 template = "../../.."
