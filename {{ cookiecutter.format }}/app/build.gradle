@@ -68,7 +68,7 @@ dependencies {
 {%- for lib in cookiecutter.gradle_dependencies.implementation %}
     implementation "{{ lib }}"
 {%- endfor %}
-{%- endif -%}
+{% endif -%}
 }
 
 // ========== START USER PROVIDED CONTENT ==========
