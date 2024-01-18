@@ -17,7 +17,7 @@
   "version_code": "10000",
   "python_version": "3.X.0",
   "extract_packages" : "",
-  "gradle_dependencies": "",
+  "build_gradle_dependencies": "",
   "build_gradle_extra_content": "",
   "android_manifest_attrs_extra_content": "",
   "android_manifest_extra_content": "",

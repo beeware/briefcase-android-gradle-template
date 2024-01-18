@@ -64,8 +64,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-{%- if cookiecutter.gradle_dependencies -%}
-{%- for lib in cookiecutter.gradle_dependencies.implementation %}
+{%- if cookiecutter.build_gradle_dependencies -%}
+{%- for lib in cookiecutter.build_gradle_dependencies.implementation %}
     implementation "{{ lib }}"
 {%- endfor %}
 {% endif -%}
