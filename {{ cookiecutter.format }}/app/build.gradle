@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.chaquo.python'
 
 android {
-    // Android 13 == SDK Level 33. This number should generally be kept up to date with
+    // Android 14 == SDK Level 34. This number should generally be kept up to date with
     // the most recent supported Android release.
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     namespace "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
 
@@ -19,7 +19,7 @@ android {
         // (https://github.com/beeware/rubicon-java/issues/74).
         minSdkVersion 24
         // This should gnerally match the compileSDKVersion from above.
-        targetSdkVersion 33
+        targetSdkVersion 34
 
         python {
             version "{{ cookiecutter.python_version|py_tag }}"
