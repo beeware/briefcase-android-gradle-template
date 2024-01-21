@@ -6,12 +6,23 @@
   "module_name": "{{ cookiecutter.app_name|replace('-', '_') }}",
   "bundle": "com.example",
   "package_name": "{{ cookiecutter.bundle|replace('-', '_') }}",
+  "primary_color": "#008577",
+  "primary_color_dark": "#00574B",
+  "accent_color": "#D81B60",
   "splash_background_color": "#FFFFFF",
+  "permissions": "",
+  "features": "",
   "version": "1.0",
   "version_code": "10000",
   "python_version": "3.X.0",
   "extract_packages" : "",
   "build_gradle_extra_content": "",
+  "android_manifest_attrs_extra_content": "",
+  "android_manifest_extra_content": "",
+  "android_manifest_application_attrs_extra_content": "",
+  "android_manifest_application_extra_content": "",
+  "android_manifest_activity_attrs_extra_content": "",
+  "android_manifest_activity_extra_content": "",
   "_copy_without_render": [
     "gradlew",
     "gradle.bat",
@@ -21,6 +32,7 @@
     "*.png"
   ],
   "_extensions": [
-      "briefcase.integrations.cookiecutter.PythonVersionExtension"
+    "briefcase.integrations.cookiecutter.PythonVersionExtension",
+    "briefcase.integrations.cookiecutter.XMLExtension"
   ]
 }
