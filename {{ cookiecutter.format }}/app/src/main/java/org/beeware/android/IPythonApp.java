@@ -13,5 +13,6 @@ public interface IPythonApp {
     void onConfigurationChanged(Configuration newConfig);
     boolean onOptionsItemSelected(MenuItem menuitem);
     boolean onPrepareOptionsMenu(Menu menu);
-    void onRequestPermissionsResultCallback(int requestCode, String[] permissions, int[] grantResults);
+    // There's no need to add any more methods to this interface, as the Python 
+    // call mechanism no longer uses it.
 }
