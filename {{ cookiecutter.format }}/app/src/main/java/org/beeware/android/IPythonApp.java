@@ -13,6 +13,6 @@ public interface IPythonApp {
     void onConfigurationChanged(Configuration newConfig);
     boolean onOptionsItemSelected(MenuItem menuitem);
     boolean onPrepareOptionsMenu(Menu menu);
-    // There's no need to add any more methods to this interface, as the Python 
+    // There's no need to add any more methods to this interface, as the Python
     // call mechanism no longer uses it.
 }
