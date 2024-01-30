@@ -107,6 +107,38 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onResume() complete");
     }
 
+    protected void onPause() {
+        Log.d(TAG, "onPause() start");
+        super.onPause();
+        userCode("onPause");
+        Log.d(TAG, "onPause() complete");
+    }
+
+    protected void onStop() {
+        Log.d(TAG, "onStop() start");
+        super.onStop();
+        userCode("onStop");
+        Log.d(TAG, "onStop() complete");
+    }
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy() start");
+        super.onDestroy();
+        userCode("onDestroy");
+        Log.d(TAG, "onDestroy() complete");
+    }
+    protected void onRestart() {
+        Log.d(TAG, "onRestart() start");
+        super.onRestart();
+        userCode("onRestart");
+        Log.d(TAG, "onRestart() complete");
+    }
+    public void onTopResumedActivityChanged (boolean isTopResumedActivity){
+        Log.d(TAG, "onTopResumedActivityChanged() start");
+        super.onTopResumedActivityChanged(isTopResumedActivity);
+        userCode("onTopResumedActivityChanged", isTopResumedActivity);
+        Log.d(TAG, "onTopResumedActivityChanged() complete");
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         Log.d(TAG, "onActivityResult() start");
@@ -152,7 +184,12 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
         try {
-            return pythonApp.callAttr(methodName, args);
+            if (pythonApp.containsKey(methodName)) {
+                return pythonApp.callAttr(methodName, args);
+            } else {
+                // Handle the case where the method doesn't exist
+                return null;
+            }
         } catch (PyException e) {
             if (e.getMessage().startsWith("NotImplementedError")) {
                 return null;
