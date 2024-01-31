@@ -170,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        Log.d(TAG, "onRequestPermissionsResult() start");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        userCode("onRequestPermissionsResult", requestCode, permissions, grantResults);
+        Log.d(TAG, "onRequestPermissionsResult() complete");
+    }
+
     private PyObject userCode(String methodName, Object... args) {
         if (pythonApp == null) {
             // Could be a non-graphical app such as Python-support-testbed.

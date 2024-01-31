@@ -25,6 +25,16 @@
             </intent-filter>
             {{ cookiecutter.android_manifest_activity_extra_content }}
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="{{ cookiecutter.bundle }}.{{ cookiecutter.app_name }}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
         {{ cookiecutter.android_manifest_application_extra_content }}
     </application>
     {{ cookiecutter.android_manifest_extra_content }}
