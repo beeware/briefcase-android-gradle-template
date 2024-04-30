@@ -3,5 +3,5 @@
     <item android:drawable="@color/colorSplashScreenBackground"/>
     <item
         android:gravity="center"
-        android:drawable="@drawable/splash_image_box" />
+        android:drawable="@mipmap/splash" />
 </layer-list>
