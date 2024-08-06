@@ -20,6 +20,9 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import android.os.Handler;
+import android.widget.Toast;
+import android.app.AlertDialog;
 
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
 
@@ -29,6 +32,26 @@ public class MainActivity extends AppCompatActivity {
     // To profile app launch, use `adb -s MainActivity`; look for "onCreate() start" and "onResume() completed".
     private String TAG = "MainActivity";
     private static PyObject pythonApp;
+    private boolean doubleBackToExitPressedOnce = false;
+    
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            // super.onBackPressed(); // Exit the app
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.exit_confirmation_title)
+                .setMessage(R.string.exit_confirmation_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> finish())
+                .setNegativeButton(R.string.no, null)
+                .show();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.press_back_again_to_exit, Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000); // Reset after 2 seconds
+    }
 
     /**
      * This method is called by `app.__main__` over JNI in Python when the BeeWare

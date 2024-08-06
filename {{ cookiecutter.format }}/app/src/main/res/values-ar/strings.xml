@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="formal_name">{{ cookiecutter.formal_name }}</string>
+    <string name="app_name">{{ cookiecutter.app_name }}</string>
+    <string name="exit_confirmation_title">تأكيد الخروج</string>
+    <string name="exit_confirmation_message">هل ترغب بالخروج من التطبيق؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="press_back_again_to_exit">اضغط رجوع مرة أخرى للخروج</string>
+</resources>
