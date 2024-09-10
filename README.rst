@@ -30,10 +30,9 @@ However, if you *do* want use this template directly...
    ``my-project``, and a formal name of ``My Project``.
 
 3. Add your code to the template, into the ``My Project/app/src/main/python``
-   directory. At the very minimum, you need to have an ``<app
-   name>/__main__.py`` file that invokes
-   ``org.beeware.android.MainActivity.setPythonApp()``, providing an
-   ``IPythonApp`` instance. This provides the hooks into the Android application
+   directory. At the very minimum, you need to have an ``<app name>/__main__.py``
+   file that invokes ``org.beeware.android.MainActivity.setPythonApp()``, providing
+   an ``IPythonApp`` instance. This provides the hooks into the Android application
    lifecycle (``onCreate``, ``onResume`` and so on); it's up to you what your
    code does with those lifecycle hooks.
 
