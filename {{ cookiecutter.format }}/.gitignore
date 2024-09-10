@@ -18,17 +18,3 @@
 # Build products
 /build
 app/build
-# Files from BeeWare support package
-app/include/python3.*
-app/libs/rubicon.jar
-app/libs/*/libbz2.so
-app/libs/*/libssl1.1.so
-app/libs/*/librubicon.so
-app/libs/*/libsqlite3.so
-app/libs/*/libffi.so
-app/libs/*/libpython3.*.so
-app/libs/*/libcrypto1.1.so
-app/libs/*/libssl.so
-app/libs/*/libcrypto.so
-app/libs/*/liblzma.so
-app/src/main/assets/stdlib/pythonhome.*.zip
