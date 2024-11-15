@@ -1,0 +1,3 @@
+# Briefcase may overwrite the contents of this file to configure Chaquopy
+# pip options as required by the app configuration.
+# Empty lines and lines starting with # will be ignored
