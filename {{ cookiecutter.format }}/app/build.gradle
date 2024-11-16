@@ -23,13 +23,12 @@ android {
         python {
             version "{{ cookiecutter.python_version|py_tag }}"
 
-
             pip {
                 install "-r", "requirements.txt"
 
                 def f = new File(project.projectDir, "pip-options.txt")
                 def pipOptions = f.isFile() ? f.getText("utf-8").split("\n") : []
-                pipOptions = pipOptions.findAll { !it.startsWith("#") && !it.isBlank() }
+                pipOptions = pipOptions.findAll { !it.isBlank() }
                 options(*pipOptions)
             }
             {%- if cookiecutter.extract_packages %}
