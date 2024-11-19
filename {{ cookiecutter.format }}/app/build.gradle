@@ -27,7 +27,7 @@ android {
                 install "-r", "requirements.txt"
 
                 def f = new File(project.projectDir, "pip-options.txt")
-                def pipOptions = f.isFile() ? f.getText("utf-8").split("\n") : []
+                def pipOptions = f.getText("utf-8").split("\n")
                 pipOptions = pipOptions.findAll { !it.isBlank() }
                 options(*pipOptions)
             }
