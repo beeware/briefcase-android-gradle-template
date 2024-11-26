@@ -1,9 +1,9 @@
 {
   "format": "gradle",
   "formal_name": "App Name",
-  "safe_formal_name": "{{ cookiecutter.formal_name }}",
-  "app_name": "{{ cookiecutter.formal_name|lower|replace(' ', '-') }}",
-  "module_name": "{{ cookiecutter.app_name|replace('-', '_') }}",
+  "safe_formal_name": "{{ cookiecutter.formal_name|escape_gradle }}",
+  "app_name": "{{ cookiecutter.formal_name|lower|replace(' ', '-')|escape_gradle }}",
+  "module_name": "{{ cookiecutter.app_name|replace('-', '_')|escape_gradle }}",
   "bundle": "com.example",
   "package_name": "{{ cookiecutter.bundle|replace('-', '_') }}",
   "primary_color": "#008577",
@@ -35,6 +35,7 @@
   ],
   "_extensions": [
     "briefcase.integrations.cookiecutter.PythonVersionExtension",
-    "briefcase.integrations.cookiecutter.XMLExtension"
+    "briefcase.integrations.cookiecutter.XMLExtension",
+    "briefcase.integrations.cookiecutter.GradleEscape"
   ]
 }
