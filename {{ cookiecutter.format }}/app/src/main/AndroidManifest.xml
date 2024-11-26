@@ -27,7 +27,7 @@
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="{{ cookiecutter.bundle }}.{{ cookiecutter.app_name|escape_gradle }}.fileprovider"
+            android:authorities="{{ cookiecutter.bundle }}.{{ cookiecutter.app_name }}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
