@@ -35,6 +35,7 @@
   ],
   "_extensions": [
     "briefcase.integrations.cookiecutter.PythonVersionExtension",
-    "briefcase.integrations.cookiecutter.XMLExtension"
+    "briefcase.integrations.cookiecutter.XMLExtension",
+    "briefcase.integrations.cookiecutter.GradleEscape"
   ]
 }
