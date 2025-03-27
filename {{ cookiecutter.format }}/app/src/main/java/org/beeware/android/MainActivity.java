@@ -3,6 +3,8 @@ package org.beeware.android;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.system.Os;
+import android.system.ErrnoException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +60,22 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(layout);
         singletonThis = this;
 
+        String envStr = getIntent().getStringExtra("org.beeware.ENV");
+        if (envStr != null) {
+            try {
+                JSONObject envJson = new JSONObject(envStr);
+                for (Iterator<String> it = envJson.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    String value = envJson.getString(key);
+                    Os.setenv(key, value, true);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (ErrnoException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         Python py;
         if (Python.isStarted()) {
             Log.d(TAG, "Python already started");
@@ -76,20 +94,6 @@ public class MainActivity extends AppCompatActivity {
                     List<PyObject> sysArgv = py.getModule("sys").get("argv").asList();
                     for (int i = 0; i < argvJson.length(); i++) {
                         sysArgv.add(PyObject.fromJava(argvJson.getString(i)));
-                    }
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            String envStr = getIntent().getStringExtra("org.beeware.ENV");
-            if (envStr != null) {
-                try {
-                    JSONObject envJson = new JSONObject(envStr);
-                    for (Iterator<String> it = envJson.keys(); it.hasNext(); ) {
-                        String key = it.next();
-                        String value = envJson.getString(key);
-                        py.getModule("os").get("environ").callAttr("__setitem__", key, value);
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
