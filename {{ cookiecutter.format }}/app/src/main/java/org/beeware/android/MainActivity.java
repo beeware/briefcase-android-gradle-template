@@ -16,9 +16,11 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONException;
 
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
@@ -74,6 +76,20 @@ public class MainActivity extends AppCompatActivity {
                     List<PyObject> sysArgv = py.getModule("sys").get("argv").asList();
                     for (int i = 0; i < argvJson.length(); i++) {
                         sysArgv.add(PyObject.fromJava(argvJson.getString(i)));
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String envStr = getIntent().getStringExtra("org.beeware.ENV");
+            if (envStr != null) {
+                try {
+                    JSONObject envJson = new JSONObject(envStr);
+                    for (Iterator<String> it = envJson.keys(); it.hasNext(); ) {
+                        String key = it.next();
+                        String value = envJson.getString(key);
+                        py.getModule("os").get("environ").callAttr("__setitem__", key, value);
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
