@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(layout);
         singletonThis = this;
 
-        String envStr = getIntent().getStringExtra("org.beeware.ENV");
-        if (envStr != null) {
+        String environStr = getIntent().getStringExtra("org.beeware.ENVIRON");
+        if (environStr != null) {
             try {
-                JSONObject envJson = new JSONObject(envStr);
-                for (Iterator<String> it = envJson.keys(); it.hasNext(); ) {
+                JSONObject environJson = new JSONObject(environStr);
+                for (Iterator<String> it = environJson.keys(); it.hasNext(); ) {
                     String key = it.next();
-                    String value = envJson.getString(key);
+                    String value = environJson.getString(key);
                     Os.setenv(key, value, true);
                 }
             } catch (JSONException e) {
