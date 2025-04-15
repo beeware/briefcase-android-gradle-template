@@ -4,7 +4,7 @@ apply plugin: 'com.chaquo.python'
 android {
     // This number should generally be kept up to date with
     // the most recent supported Android release.
-    compileSdkVersion {{ cookiecutter.target_sdk_version }}
+    compileSdkVersion {{ cookiecutter.target_os_version }}
 
     namespace "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
 
@@ -18,7 +18,7 @@ android {
         // argument to `adb logcat`. This supports over 97% of active devices (as of sept 2024).
         minSdkVersion {{ cookiecutter.min_os_version }}
         // This should generally match the compileSDKVersion from above.
-        targetSdkVersion {{ cookiecutter.target_sdk_version }}
+        targetSdkVersion {{ cookiecutter.target_os_version }}
 
         python {
             version "{{ cookiecutter.python_version|py_tag }}"
