@@ -16,6 +16,8 @@
   "version": "1.0",
   "version_code": "10000",
   "python_version": "3.X.0",
+  "min_os_version": "24",
+  "target_sdk_version": "34",
   "extract_packages" : "",
   "build_gradle_dependencies": "",
   "build_gradle_extra_content": "",
