@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.chaquo.python'
 
 android {
-    // Android 14 == SDK Level 34. This number should generally be kept up to date with
+    // This number should generally be kept up to date with
     // the most recent supported Android release.
-    compileSdkVersion 34
+    compileSdkVersion {{ cookiecutter.target_os_version }}
 
     namespace "{{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}"
 
@@ -16,9 +16,9 @@ android {
 
         // Briefcase currently requires API Level 24 for the `pidof` command, and the `--pid`
         // argument to `adb logcat`. This supports over 97% of active devices (as of sept 2024).
-        minSdkVersion 24
+        minSdkVersion {{ cookiecutter.min_os_version }}
         // This should generally match the compileSDKVersion from above.
-        targetSdkVersion 34
+        targetSdkVersion {{ cookiecutter.target_os_version }}
 
         python {
             version "{{ cookiecutter.python_version|py_tag }}"
