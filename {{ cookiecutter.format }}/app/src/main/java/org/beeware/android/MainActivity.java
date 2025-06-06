@@ -3,6 +3,8 @@ package org.beeware.android;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.system.Os;
+import android.system.ErrnoException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +18,11 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONException;
 
 import {{ cookiecutter.package_name }}.{{ cookiecutter.module_name }}.R;
@@ -55,6 +59,22 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         this.setContentView(layout);
         singletonThis = this;
+
+        String environStr = getIntent().getStringExtra("org.beeware.ENVIRON");
+        if (environStr != null) {
+            try {
+                JSONObject environJson = new JSONObject(environStr);
+                for (Iterator<String> it = environJson.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    String value = environJson.getString(key);
+                    Os.setenv(key, value, true);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (ErrnoException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         Python py;
         if (Python.isStarted()) {
