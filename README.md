@@ -23,12 +23,11 @@ However, if you *do* want use this template directly...
         $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template
 
     This will ask you for a number of details of your application,
-    including the <span class="title-ref">name</span> of your
-    application (which should be a valid PyPI identifier), and the
-    <span class="title-ref">Formal Name</span> of your application (the
+    including the name of your application (which should be a valid 
+    PyPI identifier), and the Formal Name of your application (the
     full name you use to describe your app). The remainder of these
-    instructions will assume a <span class="title-ref">name</span> of
-    `my-project`, and a formal name of `My Project`.
+    instructions will assume a name of `my-project`, and a formal name
+    of `My Project`.
 
 3.  Add your code to the template, into the
     `My Project/app/src/main/python` directory. At the very minimum, you
