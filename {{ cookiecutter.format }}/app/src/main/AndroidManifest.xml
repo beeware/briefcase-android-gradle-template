@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" {{ cookiecutter.android_manifest_attrs_extra_content }}>
-    {%- for permission in cookiecutter.permissions %}
+    {%- for permission, detail in cookiecutter.permissions.items() %}
     <uses-permission android:name="{{ permission }}"
-        {%- if permission is mapping -%}
-        {%- for attr_name, attr_value in permission.items() -%}
+        {%- if detail is mapping -%}
+        {%- for attr_name, attr_value in detail.items() -%}
         {{ attr_name }}="{{ attr_value }}"
         {%- endfor -%}
         {%- endif -%} />
