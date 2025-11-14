@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" {{ cookiecutter.android_manifest_attrs_extra_content }}>
-    {%- for permission in cookiecutter.permissions %}
-    <uses-permission android:name="{{ permission }}" />
+    {%- for permission, detail in cookiecutter.permissions.items() %}
+    {%- if detail is not false %}
+    <uses-permission android:name="{{ permission }}"
+        {%- if detail is mapping -%}
+        {%- for attr_name, attr_value in detail.items() -%}
+        {{ " " }}{{ attr_name }}="{{ attr_value }}"
+        {%- endfor -%}
+        {%- endif -%} />
+    {%- endif %}
     {%- endfor %}
     {%- for feature, value in cookiecutter.features.items() %}
     <uses-feature android:name="{{ feature }}" android:required="{{ value|bool_attr }}" />
