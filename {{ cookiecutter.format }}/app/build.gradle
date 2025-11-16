@@ -33,6 +33,12 @@ android {
             }
             {%- if cookiecutter.extract_packages %}
             extractPackages {{ cookiecutter.extract_packages }}
+            {%- else %}
+            def f = new File(project.projectDir, "extract-packages.txt")
+            def packages = f.exists() ? f.readLines("utf-8")
+                        .collect { it.trim() }
+                        .findAll { !it.isBlank() } : []
+            extractPackages(*packages)
             {%- endif %}
         }
         ndk {
