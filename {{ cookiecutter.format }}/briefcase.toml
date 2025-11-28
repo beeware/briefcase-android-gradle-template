@@ -1,13 +1,13 @@
 # Generated using Python {{ cookiecutter.python_version }}
 [briefcase]
-target_version = "0.3.15"
+target_version = "0.3.26"
 
 [paths]
 app_path = "app/src/main/python"
 app_requirements_path = "app/requirements.txt"
 app_requirement_installer_args_path = "app/pip-options.txt"
 metadata_resource_path = "app/src/main/res/values/briefcase.xml"
-metadata_extract_packages_path = "app/extract-packages.txt"
+extract_packages_path = "app/extract-packages.txt"
 
 icon.round.48 = "app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
 icon.round.72 = "app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
