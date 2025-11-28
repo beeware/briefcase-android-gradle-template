@@ -18,7 +18,6 @@
   "python_version": "3.X.0",
   "min_os_version": "24",
   "target_os_version": "35",
-  "extract_packages" : "",
   "build_gradle_dependencies": "",
   "build_gradle_extra_content": "",
   "android_manifest_attrs_extra_content": "",
