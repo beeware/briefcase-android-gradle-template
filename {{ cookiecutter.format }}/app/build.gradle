@@ -31,9 +31,11 @@ android {
                 pipOptions = pipOptions.findAll { !it.isBlank() }
                 options(*pipOptions)
             }
-            {%- if cookiecutter.extract_packages %}
-            extractPackages {{ cookiecutter.extract_packages }}
-            {%- endif %}
+            def f = new File(project.projectDir, "extract-packages.txt")
+            def packages = f.readLines("utf-8")
+                        .collect { it.trim() }
+                        .findAll { !it.isBlank() }
+            extractPackages(*packages)
         }
         ndk {
             {% if cookiecutter.python_version|py_tag in ["3.9", "3.10", "3.11"] %}
