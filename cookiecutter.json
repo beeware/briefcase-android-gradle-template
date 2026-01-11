@@ -5,6 +5,7 @@
   "app_name": "{{ cookiecutter.formal_name|lower|replace(' ', '-') }}",
   "module_name": "{{ cookiecutter.app_name|replace('-', '_') }}",
   "bundle": "com.example",
+  "bundle_identifier": "com.example.my-app",
   "package_name": "{{ cookiecutter.bundle|replace('-', '_') }}",
   "primary_color": "#008577",
   "primary_color_dark": "#00574B",
