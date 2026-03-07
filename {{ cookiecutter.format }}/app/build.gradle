@@ -38,7 +38,10 @@ android {
             extractPackages(*packages)
         }
         ndk {
-            {% if cookiecutter.python_version|py_tag in ["3.9", "3.10", "3.11"] %}
+            {% if cookiecutter.ndk.abi_filters %}
+            abiFilters {% for abi in cookiecutter.ndk.abi_filters %}"{{ abi }}"{% if not loop.last %}, {% endif %}{% endfor %}
+
+            {% elif cookiecutter.python_version|py_tag in ["3.9", "3.10", "3.11"] %}
             // Chaquopy also supports x86, but it's not very useful anymore, so we'll
             // disable it to speed up the build.
             abiFilters "arm64-v8a", "armeabi-v7a", "x86_64"
