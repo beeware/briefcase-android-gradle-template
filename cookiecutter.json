@@ -20,6 +20,7 @@
   "min_os_version": "24",
   "target_os_version": "35",
   "build_gradle_dependencies": "",
+  "ndk": {"abi_filters": null},
   "build_gradle_extra_content": "",
   "android_manifest_attrs_extra_content": "",
   "android_manifest_extra_content": "",
