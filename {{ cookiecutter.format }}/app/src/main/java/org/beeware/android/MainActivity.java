@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.system.Os;
 import android.system.ErrnoException;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -196,6 +197,17 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         userCode("onRequestPermissionsResult", requestCode, permissions, grantResults);
         Log.d(TAG, "onRequestPermissionsResult() complete");
+    }
+
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.d(TAG, "dispatchKeyEvent() start");
+        PyObject pyResult = userCode("dispatchKeyEvent", event);
+        boolean result = (pyResult == null) ? false : pyResult.toBoolean();
+        if (!result) {
+            result = super.dispatchKeyEvent(event);
+        }
+        Log.d(TAG, "dispatchKeyEvent() complete");
+        return result;
     }
 
     private PyObject userCode(String methodName, Object... args) {
