@@ -174,6 +174,21 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onConfigurationChanged() complete");
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed() start");
+        // Give the Python app a chance to handle the hardware/gesture back
+        // button. If it returns a truthy value the event is consumed; otherwise
+        // fall back to the platform default (finishing the activity).
+        PyObject pyResult = userCode("onBackPressed");
+        if (pyResult != null && pyResult.toBoolean()) {
+            Log.d(TAG, "onBackPressed() handled by Python");
+            return;
+        }
+        super.onBackPressed();
+        Log.d(TAG, "onBackPressed() complete");
+    }
+
     public boolean onOptionsItemSelected(MenuItem menuitem) {
         Log.d(TAG, "onOptionsItemSelected() start");
         PyObject pyResult = userCode("onOptionsItemSelected", menuitem);
