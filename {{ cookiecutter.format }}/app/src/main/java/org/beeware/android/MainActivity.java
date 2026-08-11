@@ -8,9 +8,16 @@ import android.system.ErrnoException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.SystemBarStyle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.chaquo.python.Kwarg;
 import com.chaquo.python.PyException;
@@ -56,9 +63,21 @@ public class MainActivity extends AppCompatActivity {
         // Change away from the splash screen theme to the app theme.
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        LinearLayout layout = new LinearLayout(this);
-        this.setContentView(layout);
         singletonThis = this;
+
+        EdgeToEdge.enable(this, SystemBarStyle.dark(getColor(R.color.colorPrimaryDark)));
+        View layout = new FrameLayout(this);
+        setContentView(
+            layout,
+            new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        );
+
+        // setContentView below has given the FrameLayout a position and size that
+        // doesn't overlap anything, so use that as the parent of the app's content.
+        findViewById(android.R.id.content).setId(View.NO_ID);
+        layout.setId(android.R.id.content);
 
         String environStr = getIntent().getStringExtra("org.beeware.ENVIRON");
         if (environStr != null) {
@@ -111,6 +130,44 @@ public class MainActivity extends AppCompatActivity {
 
         userCode("onCreate");
         Log.d(TAG, "onCreate() complete");
+    }
+
+    public void setContentView(View view, ViewGroup.LayoutParams lp) {
+        super.setContentView(view, lp);
+
+        // EdgeToEdge.enable calls Window.setStatusBarColor, but that has no effect when
+        // targeting API level 35 and higher, so we need to manually draw the status bar
+        // background (https://stackoverflow.com/q/78832208).
+        View statusBarBackground = new View(this);
+        statusBarBackground.setBackgroundColor(getColor(R.color.colorPrimaryDark));
+        addContentView(
+            statusBarBackground,
+            new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
+        );
+
+        // Based on the "Empty Views Activity" from Android Studio Quail 3.
+        ViewCompat.setOnApplyWindowInsetsListener(
+            view,
+            (v, insets) -> {
+                // systemBars includes the status bar, navigation bar (which may be on
+                // the left or right on API level 28 and older), and action bar.
+                Insets systemBars = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout()
+                );
+                ((ViewGroup.MarginLayoutParams) v.getLayoutParams()).setMargins(
+                    systemBars.left, systemBars.top, systemBars.right, systemBars.bottom
+                );
+
+                ViewGroup.MarginLayoutParams statusLp =
+                    (ViewGroup.MarginLayoutParams) statusBarBackground.getLayoutParams();
+                statusLp.height = systemBars.top;
+                statusLp.setMargins(systemBars.left, 0, systemBars.right, 0);
+                statusBarBackground.requestLayout();
+
+                return insets;
+            }
+        );
     }
 
     protected void onStart() {

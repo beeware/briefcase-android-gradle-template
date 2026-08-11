@@ -66,6 +66,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:1.7.1"
+
 {%- if cookiecutter.build_gradle_dependencies -%}
 {%- for lib in cookiecutter.build_gradle_dependencies.implementation %}
     implementation "{{ lib }}"
