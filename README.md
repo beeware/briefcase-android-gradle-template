@@ -28,30 +28,32 @@ However, if you *do* want use this template directly...
 
 If you've done this correctly, a project with a formal name of `My Project`, with an app name of `my-project` should have a directory structure that looks something like:
 
-    My Project/
-        app/
-            src/
-                main/
-                    python/
-                        my_project/
-                            __init__.py
-                            __main__.py (declares IPythonApp)
-                cpp/
-                    ...
-                java/
-                    ...
-                res/
-                    ...
-                AndroidManifest.xml
-            build.gradle
-            proguard-rules.pro
-            requirements.txt
-        briefcase.toml
+```text
+My Project/
+    app/
+        src/
+            main/
+                python/
+                    my_project/
+                        __init__.py
+                        __main__.py (declares IPythonApp)
+            cpp/
+                ...
+            java/
+                ...
+            res/
+                ...
+            AndroidManifest.xml
         build.gradle
-        gradle.properties
-        gradlew
-        gradlew.bat
-        settings.gradle
+        proguard-rules.pro
+        requirements.txt
+    briefcase.toml
+    build.gradle
+    gradle.properties
+    gradlew
+    gradlew.bat
+    settings.gradle
+```
 
 You're now ready to build and run your project! Either open the `My Project` directory in Android Studio, or [use the command line tools](https://developer.android.com/studio/build/building-cmdline).
 
