@@ -8,17 +8,21 @@ The easiest way to use this project is to not use it at all - at least, not dire
 
 However, if you *do* want use this template directly...
 
-1.  Install [cookiecutter](https://github.com/cookiecutter/cookiecutter). This is a tool used to bootstrap complex project templates:
+1. Install [cookiecutter](https://github.com/cookiecutter/cookiecutter). This is a tool used to bootstrap complex project templates:
 
-        $ pip install cookiecutter
+    ```console
+    $ pip install cookiecutter
+    ```
 
-2.  Run `cookiecutter` on the template:
+2. Run `cookiecutter` on the template:
 
-        $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template
+    ```console
+    $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template
+    ```
 
     This will ask you for a number of details of your application, including the name of your application (which should be a valid PyPI identifier), and the Formal Name of your application (the full name you use to describe your app). The remainder of these instructions will assume a name of `my-project`, and a formal name of `My Project`.
 
-3.  Add your code to the template, into the `My Project/app/src/main/python` directory. At the very minimum, you need to have an `<app name>/__main__.py` file that invokes `org.beeware.android.MainActivity.setPythonApp()`, providing an `IPythonApp` instance. This provides the hooks into the Android application lifecycle (`onCreate`, `onResume` and so on); it's up to you what your code does with those lifecycle hooks.
+3. Add your code to the template, into the `My Project/app/src/main/python` directory. At the very minimum, you need to have an `<app name>/__main__.py` file that invokes `org.beeware.android.MainActivity.setPythonApp()`, providing an `IPythonApp` instance. This provides the hooks into the Android application lifecycle (`onCreate`, `onResume` and so on); it's up to you what your code does with those lifecycle hooks.
 
     If your code has any dependencies, they should be listed in the file `My Project/app/requirements.txt`.
 
