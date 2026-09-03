@@ -20,7 +20,7 @@ However, if you *do* want use this template directly...
     $ cookiecutter https://github.com/beeware/briefcase-android-gradle-template
     ```
 
-    This will ask you for a number of details of your application, including the name of your application (which should be a valid PyPI identifier), and the Formal Name of your application (the full name you use to describe your app). The remainder of these instructions will assume a name of `my-project`, and a formal name of `My Project`.
+    This will ask you for a number of details of your application, including the name of your application (which should be a valid PyPI identifier), and the formal name of your application (the full name you use to describe your app). The remainder of these instructions will assume a name of `my-project`, and a formal name of `My Project`.
 
 3. Add your code to the template, into the `My Project/app/src/main/python` directory. At the very minimum, you need to have an `<app name>/__main__.py` file that invokes `org.beeware.android.MainActivity.setPythonApp()`, providing an `IPythonApp` instance. This provides the hooks into the Android application lifecycle (`onCreate`, `onResume` and so on); it's up to you what your code does with those lifecycle hooks.
 
