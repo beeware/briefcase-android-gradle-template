@@ -23,14 +23,6 @@ android {
         python {
             version "{{ cookiecutter.python_version|py_tag }}"
 
-            pip {
-                install "-r", "requirements.txt"
-
-                def f = new File(project.projectDir, "pip-options.txt")
-                def pipOptions = f.getText("utf-8").split("\n")
-                pipOptions = pipOptions.findAll { !it.isBlank() }
-                options(*pipOptions)
-            }
             def f = new File(project.projectDir, "extract-packages.txt")
             def packages = f.readLines("utf-8")
                         .collect { it.trim() }
@@ -61,6 +53,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+// Briefcase installs requirements into common and ABI-specific directories.
+// Keep Chaquopy's packaging tasks, but bypass its pip installation task for every
+// build variant. This also preserves the packages when Gradle's build is cleaned.
+afterEvaluate {
+    tasks.withType(com.chaquo.python.TaskBuilder.ReqsTask).configureEach {
+        enabled = false
+        outputDir.set(layout.projectDirectory.dir("app_packages"))
     }
 }
 

@@ -37,8 +37,7 @@ However, if you *do* want use this template directly...
     application lifecycle (`onCreate`, `onResume` and so on); it's up to
     you what your code does with those lifecycle hooks.
 
-    If your code has any dependencies, they should be listed in the file
-    `My Project/app/requirements.txt`.
+    Briefcase installs dependencies into `My Project/app/app_packages`, with shared files in `common` and architecture-specific files in directories named for each Android ABI. When using the template directly, populate this directory layout before building. Chaquopy packages these directories without installing dependencies.
 
 If you've done this correctly, a project with a formal name of
 `My Project`, with an app name of `my-project` should have a directory
@@ -61,7 +60,10 @@ structure that looks something like:
                 AndroidManifest.xml
             build.gradle
             proguard-rules.pro
-            requirements.txt
+            app_packages/
+                common/
+                arm64-v8a/
+                x86_64/
         briefcase.toml
         build.gradle
         gradle.properties
