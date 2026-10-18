@@ -1,10 +1,12 @@
 import tomllib
 from pathlib import Path
 
+import pytest
 from cookiecutter.main import cookiecutter
 
 
-def test_preinstalled_requirements(tmp_path):
+@pytest.mark.parametrize("python_version", ["3.11.17", "3.12.15", "3.13.16"])
+def test_preinstalled_requirements(tmp_path, python_version):
     """The rendered project accepts dependency directories prepared by Briefcase."""
     project = Path(
         cookiecutter(
@@ -13,7 +15,7 @@ def test_preinstalled_requirements(tmp_path):
             default_config={"replay_dir": str(tmp_path / "replay")},
             output_dir=str(tmp_path),
             extra_context={
-                "python_version": "3.13.16",
+                "python_version": python_version,
                 "permissions": {},
                 "features": {},
             },
@@ -28,3 +30,5 @@ def test_preinstalled_requirements(tmp_path):
     assert 'outputDir.set(layout.projectDirectory.dir("app_packages"))' in gradle
     assert "enabled = false" in gradle
     assert "afterEvaluate {" in gradle
+    assert 'abiFilters "arm64-v8a", "x86_64"' in gradle
+    assert "armeabi-v7a" not in gradle
