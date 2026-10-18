@@ -42,5 +42,5 @@ jobs:
       fail-fast: false
       matrix:
         runner-os: [ "macos-26", "windows-2025", "ubuntu-24.04" ]
-        python-version: [ "3.13", "3.14", "3.15" ]
+        python-version: [ "3.11", "3.12", "3.13", "3.14", "3.15" ]
         framework: [ "toga" ]

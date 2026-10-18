@@ -5,3 +5,6 @@ tmp
 .project
 .settings
 .classpath
+.tox/
+.pytest_cache/
+__pycache__/
