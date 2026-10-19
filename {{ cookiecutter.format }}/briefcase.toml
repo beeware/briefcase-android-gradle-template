@@ -1,11 +1,10 @@
 # Generated using Python {{ cookiecutter.python_version }}
 [briefcase]
-target_version = "0.3.27"
+target_version = "0.4.7"
 
 [paths]
 app_path = "app/src/main/python"
-app_requirements_path = "app/requirements.txt"
-app_requirement_installer_args_path = "app/pip-options.txt"
+app_packages_path = "app/app_packages"
 metadata_resource_path = "app/src/main/res/values/briefcase.xml"
 extract_packages_path = "app/extract-packages.txt"
 
